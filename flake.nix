@@ -107,7 +107,7 @@
 							./home/default.nix
 							./home/gui.nix
 							catppuccin.homeManagerModules.catppuccin
-							nixvim.homeManagerModules.nixvim
+              nixvim.homeManagerModules.nixvim
 						];
 					};
 				}

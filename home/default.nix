@@ -29,10 +29,12 @@
       bat
       fd
       zsh-powerlevel10k
+      mpv
   ];
   programs.tmux = {
     enable = true;
   };
+
   programs.zsh = {
     enable = true;
     enableCompletion = true;
@@ -48,11 +50,11 @@
       path = "${config.xdg.dataHome}/zsh/history";
     };
     initExtra = "source ~/.p10k.zsh";
-    plugins = [   
-    {                                                                                   
-      name = "powerlevel10k";                                                           
-      src = pkgs.zsh-powerlevel10k;                                                     
-      file = "share/zsh-powerlevel10k/powerlevel10k.zsh-theme";                         
+    plugins = [
+    {
+      name = "powerlevel10k";
+      src = pkgs.zsh-powerlevel10k;
+      file = "share/zsh-powerlevel10k/powerlevel10k.zsh-theme";
     }
     ];
 

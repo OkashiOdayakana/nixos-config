@@ -26,6 +26,8 @@
           clangd.enable = true;
           lua-ls.enable = true;
           texlab.enable = true;
+          gopls.enable = true;
+          nixd.enable = true;
         };
       };
     };
