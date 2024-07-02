@@ -5,31 +5,49 @@
 { inputs, lib, config, pkgs, ... }:
 
 {
-  imports =
-    [
-    # Imported modules
-    ../../modules/system.nix
-    ../../modules/laptop.nix
-    ../../modules/hwaccel-intel.nix
-    ../../modules/desktop/gnome
+	imports =
+		[
+# Imported modules
+		../../modules/system.nix
+			../../modules/laptop.nix
+			../../modules/hwaccel-intel.nix
+			../../modules/desktop/kde
+			../../modules/desktop/apps/firefox.nix
 
-    # Include the results of the hardware scan.
-    ./hardware-configuration.nix
+# Include the results of the hardware scan.
+			./hardware-configuration.nix
 
-    ./networking.nix
-    ./disk-config.nix
-  ];
+			./networking.nix
+			./disk-config.nix
+		];
 
-  boot.supportedFilesystems = [ "bcachefs" ];
+	boot.supportedFilesystems = [ "bcachefs" ];
 
-  sops.secrets."hosts/okashitop/password".neededForUsers = true;
+	sops.secrets."hosts/okashitop/password".neededForUsers = true;
+	users.mutableUsers = false;
 
-  # Bootloader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
+	fonts.packages = with pkgs; [
+		noto-fonts
+			noto-fonts-cjk
+			noto-fonts-emoji
+			liberation_ttf
+			fira-code
+			fira-code-symbols
+			mplus-outline-fonts.githubRelease
+			dina-font
+			proggyfonts
+			meslo-lgs-nf
+	];
+	environment.systemPackages = [
+		pkgs.vesktop
+	];
 
-  swapDevices = [ {
-    device = "/var/lib/swapfile";
-    size = 16*1024;
-  } ];
+# Bootloader.
+	boot.loader.systemd-boot.enable = true;
+	boot.loader.efi.canTouchEfiVariables = true;
+
+	swapDevices = [ {
+		device = "/var/lib/swapfile";
+		size = 16*1024;
+	} ];
 }

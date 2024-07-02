@@ -39,4 +39,12 @@
 		 })
 	];
 	hardware.sensor.iio.enable = true;
+	programs.dconf.enable = true;
+	programs.firefox = {
+		enable = true;
+		preferences = {
+			"widget.use-xdg-desktop-portal.file-picker" = 1;
+		};
+	};
+	services.pipewire.enable = true;
 }

@@ -2,6 +2,7 @@ keys:
   - &user_okashitop-win age1s06v62cp595pcazxge6f36jesl7q8zz854umu4m39srfzwcyggssl7epyh
   - &user_yubikey AD730ED08D56C23DB5EBC661CF2B200484B0E6CD
   - &server_okashitnas age1qg8cft0naf6kjt3mhl8hkse4ut0x0mtdxa3f4kkntjq0x6sqveksflk444
+  - &laptop_okashitop age1ana469qmwhdv7qyg7vexwwrgyy30m5vs3uwzpe2qlzjplruutgzs6fwdru
 
 creation_rules:
   - path_regex: secrets/[^/]+\.(yaml|json|env|ini)$
@@ -9,3 +10,4 @@ creation_rules:
       - age:
         - *user_okashitop-win
         - *server_okashitnas
+        - *laptop_okashitop

@@ -1,57 +1,64 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 {
 
-
-  # Home Manager needs a bit of information about you and the
-  # paths it should manage.
+# Home Manager needs a bit of information about you and the
+# paths it should manage.
   home = {
     username = "okashi";
     homeDirectory = "/home/okashi";
-    # This value determines the Home Manager release that your
-    # configuration is compatible with. This helps avoid breakage
-    # when a new Home Manager release introduces backwards
-    # incompatible changes.
-    #
-    # You can update Home Manager without changing this value. See
-    # the Home Manager release notes for a list of state version
-    # changes in each release.
+# This value determines the Home Manager release that your
+# configuration is compatible with. This helps avoid breakage
+# when a new Home Manager release introduces backwards
+# incompatible changes.
+#
+# You can update Home Manager without changing this value. See
+# the Home Manager release notes for a list of state version
+# changes in each release.
     stateVersion = "24.05";
   };
 
+  imports = [
+    ./neovim
+  ];
 
-  programs.neovim = {
-    enable = true;
-    viAlias = true;
-    vimAlias = true;
-    plugins = with pkgs; [
-      vimPlugins.nvim-treesitter
-      vimPlugins.nvim-treesitter.withAllGrammars
-      vimPlugins.lightline-vim
-      luajitPackages.fzf-lua
-    ];
-    extraConfig = ''
-    '';
-  };
-
+  programs.hyfetch.enable = true;
 
   home.packages = with pkgs; [
     nmap
-    ripgrep
-    bat
-    fd
- #   pkgs.gnupg
+      ripgrep
+      bat
+      fd
+      zsh-powerlevel10k
   ];
+  programs.tmux = {
+    enable = true;
+  };
+  programs.zsh = {
+    enable = true;
+    enableCompletion = true;
+    autosuggestion.enable = true;
+    syntaxHighlighting.enable = true;
 
- # services.gpg-agent = {
- #       enable = true;
- #       enableSshSupport = true;
- #       enableExtraSocket = true;
- #       defaultCacheTtl = 34560000;
- #       defaultCacheTtlSsh = 34560000;
- #       maxCacheTtl = 34560000;
- #       maxCacheTtlSsh = 34560000;
- #     };
+    shellAliases = {
+      ll = "ls -l";
+      update = "sudo nixos-rebuild switch";
+    };
+    history = {
+      size = 10000;
+      path = "${config.xdg.dataHome}/zsh/history";
+    };
+    initExtra = "source ~/.p10k.zsh";
+    plugins = [   
+    {                                                                                   
+      name = "powerlevel10k";                                                           
+      src = pkgs.zsh-powerlevel10k;                                                     
+      file = "share/zsh-powerlevel10k/powerlevel10k.zsh-theme";                         
+    }
+    ];
 
-  # Let Home Manager install and manage itself.
+  };
+
+
+# Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 }

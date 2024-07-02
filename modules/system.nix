@@ -1,6 +1,5 @@
 { inputs, config, pkgs, lib, ... }: let
   username = "okashi";
-
 in {
   sops.secrets."hosts/okashitop/password" = {};
   sops.secrets."hosts/okashitop/password".neededForUsers = true;
@@ -8,7 +7,7 @@ in {
   users.users.okashi = {
     isNormalUser = true;
     description = "okashi";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "video" "render" "audio" ];
     packages = with pkgs; [];
     hashedPasswordFile = config.sops.secrets."hosts/okashitop/password".path;
     
@@ -44,7 +43,6 @@ in {
     wget
     htop
     lm_sensors
-    inputs.agenix.packages."${system}".default
     wireguard-tools
     usbutils
     pciutils
@@ -55,6 +53,13 @@ in {
 
   # Use nftables instead of iptables.
   networking.nftables.enable = true;
+
+  # Use ZSH
+  programs.zsh = {
+  	enable = true;
+	syntaxHighlighting.enable = true;
+  };
+  users.defaultUserShell = pkgs.zsh;
 
   services.udev.packages = [ pkgs.yubikey-personalization pkgs.libu2f-host ];
 
