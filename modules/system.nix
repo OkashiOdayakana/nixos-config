@@ -47,6 +47,7 @@ in {
             pciutils
             gnupg
             nixd
+            vim
     ];
 
 # Use nftables instead of iptables.
