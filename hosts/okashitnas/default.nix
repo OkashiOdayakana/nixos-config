@@ -2,11 +2,10 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ inputs, lib, config, pkgs, ... }:
+{ ... }:
 
 {
-  imports =
-    [
+  imports = [
     # Imported modules
     ../../modules/system.nix
     ../../modules/hwaccel-intel.nix
@@ -24,7 +23,6 @@
     ./networking.nix
   ];
 
-
   boot.kernel.sysctl."net.ipv4.ip_forward" = 1;
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
@@ -38,10 +36,17 @@
   boot.zfs.extraPools = [ "Nas-main" ];
 
   # User things for NAS HDD access
-  users.groups.media.members = [ "transmission" "jellyfin" "sonarr" "radarr" ];
+  users.groups.media.members = [
+    "transmission"
+    "jellyfin"
+    "sonarr"
+    "radarr"
+  ];
 
-  swapDevices = [ {
-    device = "/var/lib/swapfile";
-    size = 16*1024;
-  } ];
+  swapDevices = [
+    {
+      device = "/var/lib/swapfile";
+      size = 16 * 1024;
+    }
+  ];
 }

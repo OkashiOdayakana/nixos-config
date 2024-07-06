@@ -1,4 +1,4 @@
-{ config, pkgs, libs, ...}:
+{ ... }:
 {
   imports = [
     ./arrs.nix

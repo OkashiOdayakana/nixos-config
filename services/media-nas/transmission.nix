@@ -1,6 +1,4 @@
-{ lib, config, pkgs, ... }:
-
-with lib;
+{ config, pkgs, ... }:
 
 let
 
@@ -10,12 +8,12 @@ let
 
 in
 
-  {
+{
 
   # https://mth.st/blog/nixos-wireguard-netns/
   systemd.services."netns@" = {
     description = "%I network namespace";
-    before = ["network.target"];
+    before = [ "network.target" ];
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;
@@ -31,8 +29,8 @@ in
   };
 
   systemd.services."wireguard-wg0" = {
-    bindsTo = ["netns@vpn.service"];
-    after = ["netns@vpn.service"];
+    bindsTo = [ "netns@vpn.service" ];
+    after = [ "netns@vpn.service" ];
   };
 
   networking.wireguard.interfaces = {
@@ -41,40 +39,47 @@ in
       privateKeyFile = config.sops.secrets."vpn/protonvpn/privateKey".path;
       socketNamespace = "init";
       interfaceNamespace = "vpn";
-      peers = [{
-        publicKey = "gU9CLkRxLUarj9+MtswvE/2Tvclx32w5aoSYeY3eEX8=";
-        # Forward all traffic via VPN.
-        allowedIPs = [ "0.0.0.0/0" "::/0" ];
-        endpoint = "163.5.171.2:51820";
-        persistentKeepalive = 15;
-      }];
+      peers = [
+        {
+          publicKey = "gU9CLkRxLUarj9+MtswvE/2Tvclx32w5aoSYeY3eEX8=";
+          # Forward all traffic via VPN.
+          allowedIPs = [
+            "0.0.0.0/0"
+            "::/0"
+          ];
+          endpoint = "163.5.171.2:51820";
+          persistentKeepalive = 15;
+        }
+      ];
     };
   };
 
-  systemd.services.${veth} = let
-    ns = "vpn";
-    ipHost = "${pkgs.iproute}/bin/ip";
-    ipGuest = "${ipHost} netns exec ${ns} ${pkgs.iproute}/bin/ip";
-  in {
-    description = "Veth interface for download";
-    bindsTo = [ "netns@${ns}.service" ];
-    after = [ "netns@${ns}.service" ];
-    wantedBy = [ "network.target" ];
-    serviceConfig = {
-      Type = "oneshot";
-      RemainAfterExit = true;
-      ExecStart = pkgs.writers.writeDash "veth-up" ''
-        ${ipHost} link add ${veth} type veth peer name veth1 netns ${ns}
-        ${ipHost} addr add ${hostIp} dev ${veth}
-        ${ipHost} link set dev ${veth} up
-        ${ipGuest} addr add ${guestIp} dev veth1
-        ${ipGuest} link set dev veth1 up
-      '';
-      ExecStop = pkgs.writers.writeDash "veth-down" ''
-        ${ipHost} link del ${veth}
-      '';
+  systemd.services.${veth} =
+    let
+      ns = "vpn";
+      ipHost = "${pkgs.iproute}/bin/ip";
+      ipGuest = "${ipHost} netns exec ${ns} ${pkgs.iproute}/bin/ip";
+    in
+    {
+      description = "Veth interface for download";
+      bindsTo = [ "netns@${ns}.service" ];
+      after = [ "netns@${ns}.service" ];
+      wantedBy = [ "network.target" ];
+      serviceConfig = {
+        Type = "oneshot";
+        RemainAfterExit = true;
+        ExecStart = pkgs.writers.writeDash "veth-up" ''
+          ${ipHost} link add ${veth} type veth peer name veth1 netns ${ns}
+          ${ipHost} addr add ${hostIp} dev ${veth}
+          ${ipHost} link set dev ${veth} up
+          ${ipGuest} addr add ${guestIp} dev veth1
+          ${ipGuest} link set dev veth1 up
+        '';
+        ExecStop = pkgs.writers.writeDash "veth-down" ''
+          ${ipHost} link del ${veth}
+        '';
+      };
     };
-  };
 
   systemd.services."container@download" = {
     bindsTo = [ "${veth}.service" ];
@@ -87,66 +92,77 @@ in
 
     bindMounts = {
       "/etc/resolv.conf" = {
-        hostPath = toString (pkgs.writeText "resolv.conf" ''
-          nameserver 9.9.9.9
-          nameserver 1.1.1.1
-        '');
+        hostPath = toString (
+          pkgs.writeText "resolv.conf" ''
+            nameserver 9.9.9.9
+            nameserver 1.1.1.1
+          ''
+        );
         isReadOnly = true;
       };
 
     };
 
-    config = { config, pkgs, ... }: {
-      environment.systemPackages = with pkgs; [
-        wireguard-tools
-        traceroute
-        ldns
-      ];
-      system.stateVersion = "24.05";
-    };
+    config =
+      { pkgs, ... }:
+      {
+        environment.systemPackages = with pkgs; [
+          wireguard-tools
+          traceroute
+          ldns
+        ];
+        system.stateVersion = "24.05";
+      };
   };
 
   services.transmission = {
-    enable = true; #Enable transmission daemon
+    enable = true; # Enable transmission daemon
     package = pkgs.transmission_4;
-    openRPCPort = true; #Open firewall for RPC
+    openRPCPort = true; # Open firewall for RPC
     credentialsFile = config.sops.secrets."media/transmission/creds.json".path;
-    settings = { #Override default settings
-    rpc-bind-address = "10.0.0.2";
-    rpc-whitelist-enabled = false;
-    rpc-authentication-required = true;
-    download-dir = "/Nas-main/torrent-media/Torrents";
-    incomplete-dir = "/Nas-main/torrent-media/Torrents/.incomplete";
+    settings = {
+      # Override default settings
+      rpc-bind-address = "10.0.0.2";
+      rpc-whitelist-enabled = false;
+      rpc-authentication-required = true;
+      download-dir = "/Nas-main/torrent-media/Torrents";
+      incomplete-dir = "/Nas-main/torrent-media/Torrents/.incomplete";
+    };
   };
-};
 
-systemd.services."transmission" = {
-  bindsTo = [ "wireguard-wg0.service"];
-  after = [ "wireguard-wg0.service" "netns@vpn.service" "${veth}.service"];
-  unitConfig.JoinsNamespaceOf = "netns@vpn.service";
-  serviceConfig = {
-    Type = "simple";
-    PrivateNetwork = true;
-    BindReadOnlyPaths = let
-      resolv = pkgs.writeText "resolv.conf" ''
+  systemd.services."transmission" = {
+    bindsTo = [ "wireguard-wg0.service" ];
+    after = [
+      "wireguard-wg0.service"
+      "netns@vpn.service"
+      "${veth}.service"
+    ];
+    unitConfig.JoinsNamespaceOf = "netns@vpn.service";
+    serviceConfig = {
+      Type = "simple";
+      PrivateNetwork = true;
+      BindReadOnlyPaths =
+        let
+          resolv = pkgs.writeText "resolv.conf" ''
             nameserver 9.9.9.9
             nameserver 1.1.1.1
-      '';
-    in [ "${resolv}:/etc/resolv.conf" ];
-    BindPaths = [ "/Nas-main/torrent-media"];
+          '';
+        in
+        [ "${resolv}:/etc/resolv.conf" ];
+      BindPaths = [ "/Nas-main/torrent-media" ];
+    };
   };
-};
 
-networking.nat = {
-  enable = true;
-  internalInterfaces = ["veth-vpn"];
-  externalInterface = "enp1s0";
-  forwardPorts = [
-    {
-      sourcePort = 9091;
-      proto = "tcp";
-      destination = "10.0.0.2:9091";
-    }
-  ];
-};
+  networking.nat = {
+    enable = true;
+    internalInterfaces = [ "veth-vpn" ];
+    externalInterface = "enp1s0";
+    forwardPorts = [
+      {
+        sourcePort = 9091;
+        proto = "tcp";
+        destination = "10.0.0.2:9091";
+      }
+    ];
+  };
 }
