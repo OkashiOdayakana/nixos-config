@@ -1,4 +1,4 @@
-{ pkgs, lib,config, ... }:
+{ pkgs, ... }:
 {
   # 1. enable vaapi on OS-level
   nixpkgs.config.packageOverrides = pkgs: {

@@ -5,51 +5,52 @@
 { pkgs, ... }:
 
 {
-    imports =
-        [
-# Imported modules
-        ../../modules/system.nix
-            ../../modules/laptop.nix
-            ../../modules/hwaccel-intel.nix
-            ../../modules/desktop/kde
-            ../../modules/desktop/apps/firefox.nix
-            ../../modules/dev/go.nix
-            ../../modules/yubikey-gpg.nix
-# Include the results of the hardware scan.
-            ./hardware-configuration.nix
+  imports = [
+    # Imported modules
+    ../../modules/system.nix
+    ../../modules/laptop.nix
+    ../../modules/hwaccel-intel.nix
+    ../../modules/desktop/kde
+    ../../modules/desktop/apps/firefox.nix
+    ../../modules/dev/go.nix
+    ../../modules/yubikey-gpg.nix
+    # Include the results of the hardware scan.
+    ./hardware-configuration.nix
 
-            ./networking.nix
-            ./disk-config.nix
-        ];
+    ./networking.nix
+    ./disk-config.nix
+  ];
+  catppuccin.accent = "blue";
+  boot.supportedFilesystems = [ "bcachefs" ];
 
-    boot.supportedFilesystems = [ "bcachefs" ];
+  sops.secrets."hosts/okashitop/password".neededForUsers = true;
+  users.mutableUsers = false;
 
-    sops.secrets."hosts/okashitop/password".neededForUsers = true;
-    users.mutableUsers = false;
+  fonts.packages = with pkgs; [
+    noto-fonts
+    noto-fonts-cjk
+    noto-fonts-emoji
+    liberation_ttf
+    fira-code
+    fira-code-symbols
+    mplus-outline-fonts.githubRelease
+    dina-font
+    proggyfonts
+    meslo-lgs-nf
+  ];
+  environment.systemPackages = [
+    pkgs.vesktop
+    pkgs.keepassxc
+  ];
 
-    fonts.packages = with pkgs; [
-        noto-fonts
-            noto-fonts-cjk
-            noto-fonts-emoji
-            liberation_ttf
-            fira-code
-            fira-code-symbols
-            mplus-outline-fonts.githubRelease
-            dina-font
-            proggyfonts
-            meslo-lgs-nf
-    ];
-    environment.systemPackages = [
-        pkgs.vesktop
-        pkgs.keepassxc
-    ];
+  # Bootloader.
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
 
-# Bootloader.
-    boot.loader.systemd-boot.enable = true;
-    boot.loader.efi.canTouchEfiVariables = true;
-
-    swapDevices = [ {
-        device = "/var/lib/swapfile";
-        size = 16*1024;
-    } ];
+  swapDevices = [
+    {
+      device = "/var/lib/swapfile";
+      size = 16 * 1024;
+    }
+  ];
 }

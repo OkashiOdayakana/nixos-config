@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ pkgs, ... }:
 
 {
   environment.systemPackages = with pkgs; [
@@ -9,8 +9,6 @@
     pcsctools
     pcscliteWithPolkit.out
   ];
-
-
 
   hardware.gpgSmartcards.enable = true;
   hardware.ledger.enable = true; # probably unrelated
@@ -23,10 +21,10 @@
   };
 
   systemd.services.shutdownSopsGpg = {
-    path = [pkgs.gnupg];
+    path = [ pkgs.gnupg ];
     script = ''
       gpgconf --homedir /var/lib/sops --kill gpg-agent
     '';
-    wantedBy = ["multi-user.target"];
+    wantedBy = [ "multi-user.target" ];
   };
 }
