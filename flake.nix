@@ -70,7 +70,7 @@
               home-manager.useUserPackages = true;
 
               home-manager.extraSpecialArgs = inputs;
-
+              home-manager.backupFileExtension = "backup";
               home-manager.users.okashi = {
                 imports = [
                   ./home/default.nix
@@ -112,6 +112,7 @@
               home-manager.useUserPackages = true;
 
               home-manager.extraSpecialArgs = inputs;
+              home-manager.backupFileExtension = "backup";
               home-manager.users.okashi = {
                 imports = [
                   ./home/default.nix

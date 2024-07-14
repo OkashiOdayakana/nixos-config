@@ -18,6 +18,7 @@
     # Import containers
     ../../services/iot
     ../../services/media-nas
+    ../../services/stats
 
     # System-specific configs
     ./services.nix
