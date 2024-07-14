@@ -10,6 +10,7 @@
     ../../modules/system.nix
     ../../modules/hwaccel-intel.nix
     ../../modules/yubikey-gpg.nix
+    ../../modules/ssh.nix
 
     # Include the results of the hardware scan.
     ./hardware-configuration.nix

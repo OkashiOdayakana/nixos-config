@@ -2,7 +2,7 @@
 {
   programs.firefox = {
     enable = true;
-    nativeMessagingHosts.packages = [ pkgs.kdePackages.plasma-browser-integration ];
+    #nativeMessagingHosts.packages = [ pkgs.kdePackages.plasma-browser-integration ];
     preferences = {
       "widget.use-xdg-desktop-portal.file-picker" = 1;
     };

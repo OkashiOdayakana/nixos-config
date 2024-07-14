@@ -16,16 +16,16 @@ in
     isNormalUser = true;
     description = "okashi";
     extraGroups = [
-      "networkmanager"
+      #      "networkmanager"
       "wheel"
-      "video"
-      "render"
-      "audio"
+      #      "video"
+      #      "render"
+      #      "audio"
     ];
     hashedPasswordFile = config.sops.secrets."hosts/okashitop/password".path;
-
   };
 
+  users.mutableUsers = false;
   # Set your time zone.
   time.timeZone = "America/New_York";
 
@@ -92,6 +92,11 @@ in
         nix-path = config.nix.nixPath;
         # Optimize store
         auto-optimise-store = true;
+
+        trusted-users = [
+          "root"
+          "@wheel"
+        ];
       };
 
       # Garbage collection
@@ -107,6 +112,7 @@ in
       # Opinionated: make flake registry and nix path match flake inputs
       registry = lib.mapAttrs (_: flake: { inherit flake; }) flakeInputs;
       nixPath = lib.mapAttrsToList (n: _: "${n}=flake:${n}") flakeInputs;
+
     };
 
   system.stateVersion = "24.05";

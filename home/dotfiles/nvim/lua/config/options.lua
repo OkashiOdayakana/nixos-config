@@ -29,7 +29,8 @@ opt.linebreak = true      -- Wrap on word boundary
 opt.termguicolors = true  -- Enable 24-bit RGB colors
 opt.laststatus = 3        -- Set global statusline
 opt.signcolumn = 'yes'    -- Reserve space for diagnostic signs
-
+g.mapleader = ","
+vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
 -----------------------------------------------------------
 -- Tabs, indent
 -----------------------------------------------------------
