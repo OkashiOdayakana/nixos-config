@@ -37,10 +37,12 @@
     dina-font
     proggyfonts
     meslo-lgs-nf
+    inter
   ];
   environment.systemPackages = [
     pkgs.vesktop
     pkgs.keepassxc
+    pkgs.clang
   ];
 
   # Bootloader.

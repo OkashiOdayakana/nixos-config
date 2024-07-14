@@ -13,6 +13,7 @@
       lua-language-server
       efm-langserver
       nixfmt-rfc-style
+      golangci-lint
     ];
 
   };

@@ -26,6 +26,7 @@
     fd
     zsh-powerlevel10k
     mpv
+    fzf
   ];
   programs.tmux = {
     enable = true;
@@ -45,7 +46,12 @@
       size = 10000;
       path = "${config.xdg.dataHome}/zsh/history";
     };
-    initExtra = "source ~/.p10k.zsh";
+    initExtra = ''
+      export FZF_BASE=$(fzf-share)
+      source "$(fzf-share)/completion.zsh"
+      source "$(fzf-share)/key-bindings.zsh"
+      source ~/.p10k.zsh
+    '';
     plugins = [
       {
         name = "powerlevel10k";

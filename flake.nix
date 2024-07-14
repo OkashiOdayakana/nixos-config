@@ -17,13 +17,11 @@
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nixvim = {
-      url = "github:nix-community/nixvim";
-      # If you are not running an unstable channel of nixpkgs, select the corresponding branch of nixvim.
-      # url = "github:nix-community/nixvim/nixos-24.05";
-
+    nixos-cosmic = {
+      url = "github:lilyinstarlight/nixos-cosmic";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    impermanence.url = "github:nix-community/impermanence";
   };
 
   outputs =
@@ -34,7 +32,8 @@
       sops-nix,
       disko,
       catppuccin,
-      nixvim,
+      nixos-cosmic,
+      impermanence,
       ...
     }@inputs:
     let
@@ -76,7 +75,6 @@
                 imports = [
                   ./home/default.nix
                   catppuccin.homeManagerModules.catppuccin
-                  nixvim.homeManagerModules.nixvim
                 ];
               };
             }
@@ -92,7 +90,12 @@
             ./hosts/okashitop
             catppuccin.nixosModules.catppuccin
             sops-nix.nixosModules.sops
+            nixos-cosmic.nixosModules.default
             {
+              nix.settings = {
+                substituters = [ "https://cosmic.cachix.org/" ];
+                trusted-public-keys = [ "cosmic.cachix.org-1:Dya9IyXD4xdBehWjrkPv6rtxpmMdRel02smYzA85dPE=" ];
+              };
               sops = {
                 defaultSopsFile = ./secrets/secrets.yaml;
                 age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
@@ -114,11 +117,44 @@
                   ./home/default.nix
                   ./home/gui.nix
                   catppuccin.homeManagerModules.catppuccin
-                  nixvim.homeManagerModules.nixvim
                 ];
               };
             }
             disko.nixosModules.disko
+          ];
+        };
+        Router = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          specialArgs = {
+            inherit inputs outputs;
+          };
+
+          modules = [
+            ./hosts/Router
+            sops-nix.nixosModules.sops
+            {
+              sops = {
+                defaultSopsFile = ./secrets/secrets.yaml;
+                age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+                secrets = {
+                  "hosts/okashitop/password" = { };
+                };
+              };
+            }
+
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+
+              home-manager.extraSpecialArgs = inputs;
+
+              home-manager.users.okashi = {
+                imports = [ ./home/default.nix ];
+              };
+            }
+            disko.nixosModules.disko
+            impermanence.nixosModules.impermanence
           ];
         };
       };
