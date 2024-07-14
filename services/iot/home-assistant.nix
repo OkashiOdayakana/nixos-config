@@ -4,13 +4,13 @@ let
     automation: !include automations.yaml
     default_config:
     frontend:
-    themes: !include_dir_merge_named themes
+      themes: !include_dir_merge_named themes
     http:
-    base_url: https://ha.okash.it
-    trusted_proxies:
-    - 127.0.0.1
-    - ::1
-    use_x_forwarded_for: true
+      base_url: https://ha.okash.it
+      trusted_proxies:
+        - 127.0.0.1
+        - ::1
+      use_x_forwarded_for: true
     scene: !include scenes.yaml
     script: !include scripts.yaml
   '';
