@@ -32,5 +32,9 @@
       HostName 192.168.1.1
       User okashi
       IdentityAgent /run/user/1000/gnupg/S.gpg-agent.ssh
+    Host nas
+      HostName 192.168.1.5
+      User okashi
+      IdentityAgent /run/user/1000/gnupg/S.gpg-agent.ssh
   '';
 }
