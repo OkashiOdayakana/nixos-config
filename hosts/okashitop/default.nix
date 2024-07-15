@@ -26,6 +26,9 @@
   sops.secrets."hosts/okashitop/password".neededForUsers = true;
   users.mutableUsers = false;
 
+  # Enable tailscale.
+  services.tailscale.enable = true;
+
   fonts.packages = with pkgs; [
     noto-fonts
     noto-fonts-cjk
@@ -43,6 +46,7 @@
     pkgs.vesktop
     pkgs.keepassxc
     pkgs.clang
+    pkgs.spotify-player
   ];
 
   # Bootloader.

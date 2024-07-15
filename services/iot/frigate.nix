@@ -23,11 +23,11 @@
       labelmap_path = "/openvino-model/coco_91cl_bkgr.txt";
     };
 
-    zones = {
-      Front = {
-        coordinates = "421,480,588,326,640,246,330,163,0,285,0,480";
-      };
-    };
+    #zones = {
+    #  Front = {
+    #    coordinates = "421,480,588,326,640,246,330,163,0,285,0,480";
+    #  };
+    #};
 
     record = {
       enabled = true;
@@ -36,7 +36,7 @@
         mode = "all";
       };
       events = {
-        required_zones = [ "Front" ];
+        #  required_zones = [ "Front" ];
         retain = {
           default = 60;
           mode = "motion";
