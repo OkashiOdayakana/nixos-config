@@ -11,6 +11,9 @@
     ../../modules/ssh.nix
     ../../modules/router
 
+    ../../modules/node_exporter.nix
+    ../../modules/promtail.nix
+
     ./impermenance.nix
     ./disk-config.nix
     # Include the results of the hardware scan.

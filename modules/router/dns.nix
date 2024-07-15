@@ -1,5 +1,6 @@
-{ ... }:
+{ config, pkgs, ... }:
 {
+  sops.secrets."db/blocky" = { };
   services.resolved = {
     enable = false;
   };
@@ -44,6 +45,7 @@
       customDNS = {
         mapping = {
           "ha.okash.it" = "192.168.1.5";
+          "grafana.lan" = "192.168.1.5";
         };
       };
       ede = {
@@ -70,6 +72,35 @@
         enable = true;
         path = "/metrics";
       };
+
     };
   };
+  services.postgresql = {
+    enable = true;
+    ensureDatabases = [ "blocky" ];
+    ensureUsers = [
+      {
+        name = "blocky";
+        ensureDBOwnership = true;
+      }
+    ];
+    authentication = pkgs.lib.mkOverride 10 ''
+      #type database  DBuser  auth-method
+      local all       all     trust
+    '';
+  };
+  systemd.services.postgresql.postStart =
+    let
+      password_file_path = config.sops.secrets."db/blocky".path;
+    in
+    ''
+      $PSQL -tA <<'EOF'
+        DO $$
+        DECLARE password TEXT;
+        BEGIN
+          password := trim(both from replace(pg_read_file('${password_file_path}'), E'\n', '''));
+          EXECUTE format('ALTER ROLE blocky WITH PASSWORD '''%s''';', password);
+        END $$;
+      EOF
+    '';
 }
