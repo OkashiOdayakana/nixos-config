@@ -2,16 +2,18 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ ... }:
+{ pkgs, ... }:
 
 {
+  nixpkgs.overlays = [ (import ../../services/caddy-package.nix) ];
   imports = [
     # Imported modules
     ../../modules/system.nix
     ../../modules/hwaccel-intel.nix
     ../../modules/yubikey-gpg.nix
     ../../modules/ssh.nix
-
+    #../../modules/cloudflared.nix
+    ../../modules/ddns.nix
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
 
@@ -19,7 +21,10 @@
     ../../services/iot
     ../../services/media-nas
     ../../services/stats
-
+    #../../services/caddy-package.nix
+    ../../services/caddy.nix
+    ../../services/backup/vaultwarden.nix
+    ../../services/backup/nextcloud.nix
     # System-specific configs
     ./services.nix
     ./networking.nix
@@ -36,6 +41,7 @@
   networking.hostId = "613a57b3";
 
   boot.zfs.extraPools = [ "Nas-main" ];
+  boot.kernelParams = [ "i915.enable_guc=3" ];
 
   # User things for NAS HDD access
   users.groups.media.members = [

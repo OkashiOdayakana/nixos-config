@@ -17,7 +17,7 @@
       server time4.google.com
       server time.cloudflare.com
 
-      refclock SHM 0 refid NMEA offset 0.00 precision 1e-3 poll 3 noselect
+      refclock SHM 0 refid NMEA offset 0.0603489 precision 1e-3 poll 3
       makestep 1.0 3  
       hwtimestamp *
       allow

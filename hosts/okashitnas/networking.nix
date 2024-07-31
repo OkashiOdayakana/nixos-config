@@ -3,7 +3,7 @@
 {
   networking.nameservers = [ "192.168.1.1" ];
   networking.defaultGateway = "192.168.1.1";
-  networking.interfaces.enp1s0 = {
+  networking.interfaces.enp5s0 = {
     useDHCP = false;
     ipv4.addresses = [
       {
@@ -22,6 +22,7 @@
     22
     80
     443
+    3030
     5000
     8082
     8123
@@ -32,8 +33,12 @@
     21063
     21064
     51827
+    8555
   ];
-  networking.firewall.allowedUDPPorts = [ 5353 ];
+  networking.firewall.allowedUDPPorts = [
+    5353
+    8555
+  ];
   networking.nftables.ruleset = ''
     table ip nat {
       chain PREROUTING {

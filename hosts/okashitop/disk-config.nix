@@ -36,21 +36,21 @@
                     "/root" = {
                       mountpoint = "/";
                       mountOptions = [
-                        "compress=zstd"
+                        "compress-force=zstd:1"
                         "noatime"
                       ];
                     };
                     "/home" = {
                       mountpoint = "/home";
                       mountOptions = [
-                        "compress=zstd"
+                        "compress-force=zstd:1"
                         "noatime"
                       ];
                     };
                     "/nix" = {
                       mountpoint = "/nix";
                       mountOptions = [
-                        "compress=zstd"
+                        "compress-force=zstd:1"
                         "noatime"
                       ];
                     };
