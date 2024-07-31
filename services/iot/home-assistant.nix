@@ -5,14 +5,26 @@ let
     default_config:
     frontend:
       themes: !include_dir_merge_named themes
+    homeassistant:
+      external_url: https://ha.okash.it
+      internal_url: https://ha.okash.it
+      time_zone: America/New_York
     http:
-      base_url: https://ha.okash.it
       trusted_proxies:
         - 127.0.0.1
         - ::1
       use_x_forwarded_for: true
     scene: !include scenes.yaml
     script: !include scripts.yaml
+    google_assistant:
+      project_id: okashi-ha-22375
+      service_account: !include SERVICE_ACCOUNT.JSON
+      report_state: true
+      exposed_domains:
+        - switch
+        - light
+        - fan
+        - camera
   '';
 in
 {
@@ -20,12 +32,14 @@ in
     owner = "zigbee2mqtt";
     group = "zigbee2mqtt";
   };
+
   virtualisation.oci-containers = {
     backend = "podman";
     containers.homeassistant = {
       volumes = [
         "home-assistant:/config"
         "${home_conf}:/config/configuration.yaml"
+        ''${config.sops.secrets."SERVICE_ACCOUNT.JSON".path}:/config/SERVICE_ACCOUNT.JSON''
       ];
       environment.TZ = "America/New_York";
       image = "ghcr.io/home-assistant/home-assistant:stable"; # Warning: if the tag does not change, the image will not be updated

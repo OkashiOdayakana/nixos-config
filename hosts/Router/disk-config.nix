@@ -33,6 +33,7 @@
                       "noatime"
                     ];
                   };
+                  "/root-blank" = { };
                   "/home" = {
                     mountpoint = "/home";
                     mountOptions = [

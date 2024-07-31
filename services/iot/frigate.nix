@@ -11,7 +11,7 @@
 
     detectors.ov = {
       type = "openvino";
-      device = "AUTO";
+      device = "GPU";
       model.path = "/openvino-model/ssdlite_mobilenet_v2.xml";
     };
 
@@ -22,7 +22,6 @@
       input_pixel_format = "bgr";
       labelmap_path = "/openvino-model/coco_91cl_bkgr.txt";
     };
-
     #zones = {
     #  Front = {
     #    coordinates = "421,480,588,326,640,246,330,163,0,285,0,480";
@@ -46,34 +45,58 @@
 
     ffmpeg.hwaccel_args = "preset-vaapi";
 
-    go2rtc.streams.Front = [
-      ''rtsp://admin:${
-        config.sops.placeholder."iot/frigate-cam"
-      }@192.168.5.20:554/cam/realmonitor?channel=1&subtype=0''
-      "ffmpeg:Front#audio=opus"
-    ];
-
+    go2rtc = {
+      streams = {
+        Front = [
+          ''rtsp://admin:${
+            config.sops.placeholder."iot/frigate-cam"
+          }@192.168.5.20:554/cam/realmonitor?channel=1&subtype=0''
+          "ffmpeg:Front#audio=opus"
+        ];
+        Front_sub = [
+          ''rtsp://admin:${
+            config.sops.placeholder."iot/frigate-cam"
+          }@192.168.5.20:554/cam/realmonitor?channel=1&subtype=1''
+          "ffmpeg:Front_sub#audio=opus"
+        ];
+      };
+      webrtc = {
+        candidates = [
+          "192.168.1.5:8555"
+          "ha.okash.it:8555"
+          "stun:8555"
+        ];
+      };
+    };
     cameras.Front = {
       enabled = true;
+      onvif = {
+        host = "192.168.5.20";
+        port = 80;
+        user = "admin";
+        password = "${config.sops.placeholder."iot/frigate-cam"}";
+      };
       ffmpeg = {
         output_args.record = "preset-record-generic-audio-copy";
         inputs = [
           {
-            path = ''rtsp://admin:${
-              config.sops.placeholder."iot/frigate-cam"
-            }@192.168.5.20:554/cam/realmonitor?channel=1&subtype=0'';
+            path = ''rtsp://127.0.0.1:8554/Front'';
             input_args = "preset-rtsp-restream";
             roles = [ "record" ];
           }
           {
-            path = ''rtsp://admin:${
-              config.sops.placeholder."iot/frigate-cam"
-            }@192.168.5.20:554/cam/realmonitor?channel=1&subtype=1'';
+            path = ''rtsp://127.0.0.1:8554/Front_sub'';
             input_args = "preset-rtsp-restream";
-            roles = [ "detect" ];
+            roles = [
+              "detect"
+              "audio"
+            ];
           }
         ];
 
+      };
+      live = {
+        stream_name = "Front";
       };
     };
   };

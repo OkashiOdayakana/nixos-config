@@ -10,6 +10,8 @@
       upstreams.groups.default = [
         "https://one.one.one.one/dns-query" # Using Cloudflare's DNS over HTTPS server for resolving queries.
         "https://dns.quad9.net/dns-query"
+        "https://freedns.controld.com/p0"
+        "https://unfiltered.adguard-dns.com/dns-query"
       ];
       # For initially solving DoH/DoT Requests when no system Resolver is available.
       bootstrapDns = {
@@ -45,11 +47,12 @@
       customDNS = {
         mapping = {
           "ha.okash.it" = "192.168.1.5";
+          "vw.okash.it" = "192.168.1.5";
           "grafana.lan" = "192.168.1.5";
         };
       };
       ede = {
-        enable = true;
+        enable = false;
       };
       clientLookup = {
         upstream = "192.168.1.1:5353";
@@ -72,12 +75,18 @@
         enable = true;
         path = "/metrics";
       };
-
+      queryLog = {
+        type = "postgresql";
+        target = "postgresql://blocky?host=/var/run/postgresql";
+        #:aapz9AVPPW7rJfAAogtiwraL@socket(/var/lib/postgresql)/blocky";
+        logRetentionDays = 7;
+      };
     };
   };
   services.postgresql = {
     enable = true;
     ensureDatabases = [ "blocky" ];
+    enableTCPIP = true;
     ensureUsers = [
       {
         name = "blocky";
@@ -87,6 +96,7 @@
     authentication = pkgs.lib.mkOverride 10 ''
       #type database  DBuser  auth-method
       local all       all     trust
+      host  blocky    blocky  192.168.1.5/32 password
     '';
   };
   systemd.services.postgresql.postStart =

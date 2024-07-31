@@ -6,11 +6,6 @@ let
     # For a better scrolling implementation and touch support.
     # Be sure to also disable "Use smooth scrolling" in about:preferences
     MOZ_USE_XINPUT2 = 1;
-    # Required for hardware video decoding.
-    # See https://github.com/elFarto/nvidia-vaapi-driver?tab=readme-ov-file#firefox
-    MOZ_DISABLE_RDD_SANDBOX = 1;
-    LIBVA_DRIVER_NAME = "nvidia";
-    NVD_BACKEND = "direct";
   };
   envStr = concatStringsSep " " (mapAttrsToList (n: v: "${n}=${escapeShellArg v}") env);
 
@@ -18,10 +13,21 @@ let
     owner = "yokoffing";
     repo = "Betterfox";
     rev = "128.0";
-    hash = lib.fakeHash;
+    hash = "sha256-Xbe9gHO8Kf9C+QnWhZr21kl42rXUQzqSDIn99thO1kE=";
   };
 in
 {
+  programs.librewolf = {
+    enable = true;
+    # Enable WebGL, cookies and history
+    settings = {
+      #      "webgl.disabled" = false;
+      #      "privacy.resistFingerprinting" = false;
+      #      "privacy.clearOnShutdown.history" = false;
+      #      "privacy.clearOnShutdown.cookies" = false;
+      #      "network.cookie.lifetimePolicy" = 0;
+    };
+  };
   programs.firefox = {
     enable = true;
     package = pkgs.firefox.overrideAttrs (old: {
@@ -32,21 +38,22 @@ in
             --replace "exec -a" ${escapeShellArg envStr}" exec -a"
         '';
     });
+    nativeMessagingHosts = with pkgs.kdePackages; [ plasma-browser-integration ];
 
     profiles.default = {
       id = 0;
       isDefault = true;
 
       # Hide tab bar because we have tree style tabs
-      userChrome = ''
-        #TabsToolbar {
-          visibility: collapse !important;
-        }
+      #userChrome = ''
+      #  #TabsToolbar {
+      #    visibility: collapse !important;
+      #  }
 
-        #titlebar-buttonbox {
-          height: 32px !important;
-        }
-      '';
+      #  #titlebar-buttonbox {
+      #    height: 32px !important;
+      #  }
+      #'';
 
       extraConfig = builtins.concatStringsSep "\n" [
         (builtins.readFile "${betterfox}/Securefox.js")
@@ -61,10 +68,9 @@ in
         "browser.aboutConfig.showWarning" = false; # I sometimes know what I'm doing
         "browser.ctrlTab.sortByRecentlyUsed" = false; # (default) Who wants that?
         "browser.download.useDownloadDir" = false; # Ask where to save stuff
-        "browser.translations.neverTranslateLanguages" = "de"; # No need :)
         "privacy.clearOnShutdown.history" = false; # We want to save history on exit
         # Hi-DPI
-        "layout.css.devPixelsPerPx" = "1.5";
+        #"layout.css.devPixelsPerPx" = "1.5";
         # Allow executing JS in the dev console
         "devtools.chrome.enabled" = true;
         # Disable browser crash reporting
@@ -73,8 +79,6 @@ in
         "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
         # Why the fuck can my search window make bell sounds
         "accessibility.typeaheadfind.enablesound" = false;
-        # Why the fuck can my search window make bell sounds
-        "general.autoScroll" = true;
 
         # Hardware acceleration
         # See https://github.com/elFarto/nvidia-vaapi-driver?tab=readme-ov-file#firefox
@@ -150,8 +154,9 @@ in
 
       search = {
         force = true;
-        default = "Kagi";
+        default = "Google";
         order = [
+          "Google"
           "Kagi"
           "DuckDuckGo"
           "Youtube"
@@ -164,7 +169,7 @@ in
         engines = {
           "Bing".metaData.hidden = true;
           "Amazon.com".metaData.hidden = true;
-          "Google".metaData.hidden = true;
+          "Google".metaData.hidden = false;
 
           "Kagi" = {
             iconUpdateURL = "https://kagi.com/favicon.ico";
@@ -296,11 +301,6 @@ in
       };
     };
   };
-
-  home.persistence."/state".directories = [ ".cache/mozilla" ];
-
-  home.persistence."/persist".directories = [ ".mozilla" ];
-
   xdg.mimeApps.defaultApplications = {
     "text/html" = [ "firefox.desktop" ];
     "text/xml" = [ "firefox.desktop" ];

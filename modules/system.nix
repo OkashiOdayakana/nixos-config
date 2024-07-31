@@ -47,6 +47,12 @@ in
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
+  # Use sudo-rs instead of default sudo.
+  security.sudo.enable = false;
+  security.sudo-rs = {
+    enable = true;
+    execWheelOnly = true;
+  };
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [

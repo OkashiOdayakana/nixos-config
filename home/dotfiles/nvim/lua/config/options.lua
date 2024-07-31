@@ -49,3 +49,4 @@ opt.synmaxcol = 240  -- Max column for syntax highlight
 opt.updatetime = 250 -- ms to wait for trigger an event
 
 g.have_nerd_font = true
+--vim.api.nvim_set_hl(0, "Normal", { fg = nil, bg = nil })

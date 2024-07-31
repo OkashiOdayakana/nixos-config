@@ -9,6 +9,6 @@
     ./dns.nix
     ./firewall.nix
     ./ntp.nix
-    ../hardened.nix
+    #../hardened.nix
   ];
 }

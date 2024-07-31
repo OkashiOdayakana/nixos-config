@@ -3,6 +3,9 @@
   services.grafana = {
     enable = true;
     settings = {
+      panels = {
+        disable_sanitize_html = true;
+      };
       server = {
         http_domain = "grafana.lan";
         http_port = 2342;

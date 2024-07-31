@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ ... }:
+{ pkgs, ... }:
 {
   imports = [
     # Imported modules
@@ -32,8 +32,9 @@
   #  fileSystems = {
   #    "/nix".neededForBoot = true;
   #    "/persist".neededForBoot = true;
-  #  };
+  #
 
+  boot.kernelPackages = pkgs.linuxPackages_latest;
   swapDevices = [
     {
       device = "/var/lib/swapfile";

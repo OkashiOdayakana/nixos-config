@@ -156,7 +156,7 @@ in
   networking.nat = {
     enable = true;
     internalInterfaces = [ "veth-vpn" ];
-    externalInterface = "enp1s0";
+    externalInterface = "enp5s0";
     forwardPorts = [
       {
         sourcePort = 9091;
