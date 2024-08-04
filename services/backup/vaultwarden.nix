@@ -76,7 +76,7 @@
         	-X-Powered-By
        #	# Remove Last-Modified because etag is the same and is as effective
         	-Last-Modified
-       # }
+        }
 
        # Uncomment to allow access to the admin interface only from local networks
        # import admin_redir
@@ -84,7 +84,7 @@
        # Proxy everything to Rocket
        # if located at a sub-path the reverse_proxy line will look like:
        #   reverse_proxy /subpath/* <SERVER>:80
-       reverse_proxy localhost:8222 {
+       reverse_proxy http://[::1]:8222 {
             # Send the true remote IP to Rocket, so that Vaultwarden can put this in the
             # log, so that fail2ban can ban the correct IP.
             header_up X-Real-IP {remote_host}
