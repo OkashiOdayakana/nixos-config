@@ -58,7 +58,11 @@
     tpm2-tss
     rbw
     rofi-rbw-wayland
+    pinentry-qt
   ];
+
+  programs.adb.enable = true;
+  users.users.okashi.extraGroups = [ "adbusers" ];
 
   # Bootloader.
   boot.loader.efi.canTouchEfiVariables = true;

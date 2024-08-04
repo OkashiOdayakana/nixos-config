@@ -2,12 +2,13 @@
 {
   boot.initrd = {
     enable = true;
+    systemd.enable = true;
     supportedFilesystems = [ "btrfs" ];
     systemd.services.restore-root = {
       description = "Rollback BTRFS rootfs";
       wantedBy = [ "initrd.target" ];
-      requires = [ "dev-nvme0n1p2" ];
-      after = [ "dev-nvme0n1p2" ];
+      requires = [ "dev-nvme0n1p2.device" ];
+      after = [ "dev-nvme0n1p2.device" ];
       before = [ "sysroot.mount" ];
       unitConfig.DefaultDependencies = "no";
       serviceConfig.Type = "oneshot";

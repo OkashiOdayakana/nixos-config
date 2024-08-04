@@ -38,6 +38,7 @@
   networking.firewall.allowedUDPPorts = [
     5353
     8555
+    443
   ];
   networking.nftables.ruleset = ''
     table ip nat {

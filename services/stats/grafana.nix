@@ -15,12 +15,14 @@
     };
   };
 
-  services.caddy.virtualHosts."grafana.lan".extraConfig = ''
-    tls internal
-    @websockets {
-        header Connection Upgrade
-        header Upgrade websocket
-    }
-    reverse_proxy http://127.0.0.1:${toString config.services.grafana.port}
-  '';
+  services.nginx.virtualHosts."grafana.okash.it" = {
+    addSSL = true;
+    enableACME = true;
+    locations."/grafana/" = {
+      proxyPass = "http://${toString config.services.grafana.settings.server.http_addr}:${toString config.services.grafana.settings.server.http_port}";
+      proxyWebsockets = true;
+      recommendedProxySettings = true;
+    };
+    http3 = true;
+  };
 }
