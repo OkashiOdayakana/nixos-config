@@ -10,6 +10,7 @@
     ../../modules/yubikey-gpg.nix
     ../../modules/ssh.nix
     ../../modules/router
+    ../../modules/persist-rebuild.nix
 
     ../../modules/node_exporter.nix
     ../../modules/promtail.nix
@@ -26,8 +27,6 @@
       systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
     };
-    # Needed for my GPS (for NTP)
-    kernelModules = [ "gnss-ubx" ];
   };
   #  fileSystems = {
   #    "/nix".neededForBoot = true;

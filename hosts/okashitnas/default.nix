@@ -2,10 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ pkgs, ... }:
-
 {
-  nixpkgs.overlays = [ (import ../../services/caddy-package.nix) ];
   imports = [
     # Imported modules
     ../../modules/system.nix
@@ -21,7 +18,6 @@
     ../../services/iot
     ../../services/media-nas
     ../../services/stats
-    #../../services/caddy-package.nix
     ../../services/caddy.nix
     ../../services/backup/vaultwarden.nix
     ../../services/backup/nextcloud.nix

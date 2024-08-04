@@ -48,7 +48,8 @@
         mapping = {
           "ha.okash.it" = "192.168.1.5";
           "vw.okash.it" = "192.168.1.5";
-          "grafana.lan" = "192.168.1.5";
+          "grafana.okash.it" = "192.168.1.5";
+          "nextcloud.okash.it" = "192.168.1.5";
         };
       };
       ede = {

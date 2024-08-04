@@ -11,13 +11,9 @@
     extraConfig = ''
       pool 2.fedora.pool.ntp.org iburst
       pool pool.ntp.org iburst
-      server time1.google.com
-      server time2.google.com
-      server time3.google.com
-      server time4.google.com
-      server time.cloudflare.com
 
-      refclock SHM 0 refid NMEA offset 0.0603489 precision 1e-3 poll 3
+
+      refclock SHM 0 refid NMEA offset 0.0167899 precision 1e-3 poll 3
       makestep 1.0 3  
       hwtimestamp *
       allow
@@ -29,4 +25,5 @@
       logdir /var/log/chrony
     '';
   };
+  users.users.chrony.extraGroups = [ "dialout" ];
 }
