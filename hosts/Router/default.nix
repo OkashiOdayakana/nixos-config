@@ -21,6 +21,9 @@
     ./hardware-configuration.nix
   ];
 
+  # Make sops-nix decrypt files early enough
+  sops.age.sshKeyPaths = /persist/etc/ssh;
+
   # Bootloader.
   boot = {
     loader = {
