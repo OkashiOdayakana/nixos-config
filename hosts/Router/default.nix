@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 {
   imports = [
     # Imported modules
@@ -10,7 +10,6 @@
     ../../modules/yubikey-gpg.nix
     ../../modules/ssh.nix
     ../../modules/router
-    ../../modules/persist-rebuild.nix
 
     ../../modules/node_exporter.nix
     ../../modules/promtail.nix
@@ -22,7 +21,10 @@
   ];
 
   # Make sops-nix decrypt files early enough
-  sops.age.sshKeyPaths = /persist/etc/ssh;
+  sops.age.sshKeyPaths = lib.mkForce [
+    "/persist/etc/ssh/ssh_host_ed25519_key"
+    "/persist/etc/ssh/ssh_host_ed25519_key.pub"
+  ];
 
   # Bootloader.
   boot = {
