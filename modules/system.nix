@@ -9,8 +9,11 @@ let
   username = "okashi";
 in
 {
-  sops.secrets."hosts/okashitop/password" = { };
-  sops.secrets."hosts/okashitop/password".neededForUsers = true;
+  sops.secrets.okashi-pwd = {
+    sopsFile = ../secrets/okashi-pwd;
+    format = "binary";
+  };
+  sops.secrets.okashi-pwd.neededForUsers = true;
   # Initialize user
   users.users."${username}" = {
     isNormalUser = true;
@@ -22,7 +25,7 @@ in
       #      "render"
       #      "audio"
     ];
-    hashedPasswordFile = config.sops.secrets."hosts/okashitop/password".path;
+    hashedPasswordFile = config.sops.secrets.okashi-pwd.path;
   };
 
   users.mutableUsers = false;

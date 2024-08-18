@@ -17,15 +17,10 @@
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nixos-cosmic = {
-      url = "github:lilyinstarlight/nixos-cosmic";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     lix = {
       url = "https://git.lix.systems/lix-project/lix/archive/main.tar.gz";
       flake = false;
     };
-
     lix-module = {
       url = "https://git.lix.systems/lix-project/nixos-module/archive/main.tar.gz";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -46,7 +41,6 @@
     {
       self,
       nixpkgs,
-      chaotic,
       home-manager,
       sops-nix,
       disko,
@@ -58,6 +52,19 @@
     }@inputs:
     let
       inherit (self) outputs;
+      remoteNixpkgsPatches = [
+        {
+          url = "https://github.com/NixOS/nixpkgs/pull/314820.diff";
+          sha256 = "sha256-B+XPYIJokMlh20wxKXV7xBVDmN/PuYtg0M5JbaEKOd4=";
+        }
+      ];
+      originPkgs = inputs.nixpkgs.legacyPackages."x86_64-linux";
+      nixpkgs-patched = originPkgs.applyPatches {
+        name = "nixpkgs-patched";
+        src = inputs.nixpkgs;
+        patches = map originPkgs.fetchpatch remoteNixpkgsPatches;
+      };
+      nixosSystem = import (nixpkgs-patched + "/nixos/lib/eval-config.nix");
     in
     {
       nixosConfigurations = {
@@ -86,6 +93,10 @@
                     sopsFile = ./secrets/SERVICE_ACCOUNT.JSON;
                     format = "binary";
                   };
+                  okashi-pwd = {
+                    sopsFile = ./secrets/okashi-pwd;
+                    format = "binary";
+                  };
                 };
               };
             }
@@ -104,6 +115,8 @@
                 ];
               };
             }
+            disko.nixosModules.disko
+            lanzaboote.nixosModules.lanzaboote
           ];
         };
         okashitop = nixpkgs.lib.nixosSystem {
@@ -119,10 +132,6 @@
             lix-module.nixosModules.default
 
             {
-              nix.settings = {
-                substituters = [ "https://cosmic.cachix.org/" ];
-                trusted-public-keys = [ "cosmic.cachix.org-1:Dya9IyXD4xdBehWjrkPv6rtxpmMdRel02smYzA85dPE=" ];
-              };
               sops = {
                 defaultSopsFile = ./secrets/secrets.yaml;
                 age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];

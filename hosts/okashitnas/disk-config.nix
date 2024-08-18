@@ -4,7 +4,7 @@
     disk = {
       vdb = {
         type = "disk";
-        device = lib.mkDefault "/dev/nvme0n1";
+        device = "/dev/nvme0n1";
         content = {
           type = "gpt";
           partitions = {
@@ -32,6 +32,12 @@
                 content = {
                   type = "btrfs";
                   extraArgs = [ "-f" ];
+                  postCreateHook = ''
+                    MNTPOINT=$(mktemp -d)
+                    mount "/dev/mapper/crypted" "$MNTPOINT" -o subvol=/
+                    trap 'umount $MNTPOINT; rm -rf $MNTPOINT' EXIT
+                    btrfs subvolume snapshot -r $MNTPOINT/root $MNTPOINT/root-blank
+                  '';
                   subvolumes = {
                     "/root" = {
                       mountpoint = "/";
@@ -54,6 +60,13 @@
                         "noatime"
                       ];
                     };
+                    "/persist" = {
+                      mountpoint = "/persist";
+                      mountOptions = [
+                        "compress-force=zstd:1"
+                        "noatime"
+                      ];
+                    };
                     "/swap" = {
                       mountpoint = "/.swapvol";
                       swap.swapfile.size = "24G";
@@ -67,4 +80,5 @@
       };
     };
   };
+  fileSystems."/persist".neededForBoot = true;
 }

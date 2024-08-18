@@ -7,10 +7,10 @@
 with lib;
 {
 
-  boot.kernelPackages = mkDefault pkgs.linuxPackages_latest;
+  boot.kernelPackages = mkDefault pkgs.linuxPackages_6_9_hardened;
 
   environment.memoryAllocator.provider = mkDefault "scudo";
-  environment.variables.SCUDO_OPTIONS = mkDefault "ZeroContents=1";
+  #environment.variables.SCUDO_OPTIONS = mkDefault "ZeroContents=1";
 
   security.lockKernelModules = mkDefault true;
 
@@ -21,7 +21,7 @@ with lib;
   security.forcePageTableIsolation = mkDefault true;
 
   # This is required by podman to run containers in rootless mode.
-  security.unprivilegedUsernsClone = mkDefault config.virtualisation.containers.enable;
+  #security.unprivilegedUsernsClone = mkDefault config.virtualisation.containers.enable;
 
   security.virtualisation.flushL1DataCache = mkDefault "always";
 
@@ -44,9 +44,9 @@ with lib;
 
   boot.blacklistedKernelModules = [
     # Obscure network protocols
-    "ax25"
-    "netrom"
-    "rose"
+    #"ax25"
+    #"netrom"
+    #"rose"
 
     # Old or rare or insufficiently audited filesystems
     "adfs"
@@ -82,7 +82,7 @@ with lib;
     "kernel.ftrace_enabled" = mkDefault false;
 
     # Ignore broadcast ICMP (mitigate SMURF)
-    "net.ipv4.icmp_echo_ignore_broadcasts" = mkDefault true;
+    #"net.ipv4.icmp_echo_ignore_broadcasts" = mkDefault true;
 
     "kernel.printk" = "3 3 3 3";
     # Restrict loading TTY line disciplines to the CAP_SYS_MODULE capability.
@@ -90,9 +90,9 @@ with lib;
     # Make it so a user can only use the secure attention key which is required to access root securely.
     "kernel.sysrq" = 4;
     # Protect against SYN flooding.
-    "net.ipv4.tcp_syncookies" = 1;
+    #"net.ipv4.tcp_syncookies" = 1;
     # Protect against time-wait assasination.
-    "net.ipv4.tcp_rfc1337" = 1;
+    #"net.ipv4.tcp_rfc1337" = 1;
     # Restrict abritrary use of ptrace to the CAP_SYS_PTRACE capability.
     "kernel.yama.ptrace_scope" = 2;
   };

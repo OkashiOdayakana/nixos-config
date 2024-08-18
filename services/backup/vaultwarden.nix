@@ -1,40 +1,7 @@
 { pkgs, config, ... }:
 {
-  sops.secrets."db/vaultwarden" = {
-    owner = "postgres";
-  };
   sops.secrets.cloudflare-token = { };
   sops.secrets.vaultwarden_config = { };
-  services.postgresql = {
-    enable = true;
-    package = pkgs.postgresql_15;
-    ensureDatabases = [ "vaultwarden" ];
-    enableTCPIP = true;
-    ensureUsers = [
-      {
-        name = "vaultwarden";
-        ensureDBOwnership = true;
-      }
-    ];
-    authentication = pkgs.lib.mkOverride 10 ''
-      #type database  DBuser  auth-method
-      local all all trust
-    '';
-  };
-  systemd.services.postgresql.postStart =
-    let
-      password_file_path = config.sops.secrets."db/vaultwarden".path;
-    in
-    ''
-      $PSQL -tA <<'EOF'
-        DO $$
-        DECLARE password TEXT;
-        BEGIN
-          password := trim(both from replace(pg_read_file('${password_file_path}'), E'\n', '''));
-          EXECUTE format('ALTER ROLE vaultwarden WITH PASSWORD '''%s''';', password);
-        END $$;
-      EOF
-    '';
 
   services.vaultwarden = {
     enable = true;
@@ -55,7 +22,9 @@
 
   services.caddy.virtualHosts."vw.okash.it" = {
     extraConfig = ''
-      encode zstd gzip
+      encode {
+          zstd better
+      }
 
        # Uncomment to improve security (WARNING: only use if you understand the implications!)
        # If you want to use FIDO2 WebAuthn, set X-Frame-Options to "SAMEORIGIN" or the Browser will block those requests
@@ -94,4 +63,5 @@
        }
     '';
   };
+  services.restic.backups.okashitnas.paths = [ "/var/lib/bitwarden_rs" ];
 }

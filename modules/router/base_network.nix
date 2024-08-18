@@ -23,6 +23,13 @@
           DHCPPrefixDelegation = true;
           IPv6DuplicateAddressDetection = 1;
         };
+        extraConfig = ''
+          [CAKE]
+          Bandwidth=920M
+          UseRawPacketSize=yes
+          FlowIsolationMode=triple
+          NAT=yes
+        '';
       };
       "40-vlan5" = {
         matchConfig.Name = "vlan5";

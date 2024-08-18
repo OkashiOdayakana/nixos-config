@@ -6,11 +6,6 @@ let
     # For a better scrolling implementation and touch support.
     # Be sure to also disable "Use smooth scrolling" in about:preferences
     MOZ_USE_XINPUT2 = 1;
-    # Required for hardware video decoding.
-    # See https://github.com/elFarto/nvidia-vaapi-driver?tab=readme-ov-file#firefox
-    MOZ_DISABLE_RDD_SANDBOX = 1;
-    LIBVA_DRIVER_NAME = "nvidia";
-    NVD_BACKEND = "direct";
   };
   envStr = concatStringsSep " " (mapAttrsToList (n: v: "${n}=${escapeShellArg v}") env);
 
@@ -57,11 +52,10 @@ in
       settings = {
         # General
         "intl.accept_languages" = "en-US,en";
-        "browser.startup.page" = 3; # Resume previous session on startup
+        "browser.startup.page" = 1;
         "browser.aboutConfig.showWarning" = false; # I sometimes know what I'm doing
         "browser.ctrlTab.sortByRecentlyUsed" = false; # (default) Who wants that?
         "browser.download.useDownloadDir" = false; # Ask where to save stuff
-        "browser.translations.neverTranslateLanguages" = "de"; # No need :)
         "privacy.clearOnShutdown.history" = false; # We want to save history on exit
         # Hi-DPI
         "layout.css.devPixelsPerPx" = "1.5";
@@ -73,7 +67,7 @@ in
         "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
         # Why the fuck can my search window make bell sounds
         "accessibility.typeaheadfind.enablesound" = false;
-        # Why the fuck can my search window make bell sounds
+
         "general.autoScroll" = true;
 
         # Hardware acceleration
@@ -82,7 +76,7 @@ in
         "media.ffmpeg.vaapi.enabled" = true;
         "media.rdd-ffmpeg.enabled" = true;
         "widget.dmabuf.force-enabled" = true;
-        "media.av1.enabled" = false; # XXX: change once I've upgraded my GPU
+        "media.av1.enabled" = true;
         # XXX: what is this?
         "media.ffvpx.enabled" = false;
         "media.rdd-vpx.enabled" = false;

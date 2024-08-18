@@ -15,14 +15,10 @@
     };
   };
 
-  services.nginx.virtualHosts."grafana.okash.it" = {
-    addSSL = true;
-    enableACME = true;
-    locations."/grafana/" = {
-      proxyPass = "http://${toString config.services.grafana.settings.server.http_addr}:${toString config.services.grafana.settings.server.http_port}";
-      proxyWebsockets = true;
-      recommendedProxySettings = true;
-    };
-    http3 = true;
-  };
+  services.caddy.virtualHosts."grafana.okash.it".extraConfig = ''
+    encode {
+        zstd better
+    }
+    reverse_proxy http://localhost:2342
+  '';
 }

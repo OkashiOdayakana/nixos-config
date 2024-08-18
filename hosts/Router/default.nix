@@ -10,7 +10,7 @@
     ../../modules/yubikey-gpg.nix
     ../../modules/ssh.nix
     ../../modules/router
-
+    #../../modules/hardened.nix
     ../../modules/node_exporter.nix
     ../../modules/promtail.nix
 
@@ -21,10 +21,7 @@
   ];
 
   # Make sops-nix decrypt files early enough
-  sops.age.sshKeyPaths = lib.mkForce [
-    "/persist/etc/ssh/ssh_host_ed25519_key"
-    "/persist/etc/ssh/ssh_host_ed25519_key.pub"
-  ];
+  sops.age.sshKeyPaths = lib.mkForce [ "/persist/etc/ssh/ssh_host_ed25519_key" ];
 
   # Bootloader.
   boot = {

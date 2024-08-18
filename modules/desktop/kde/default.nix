@@ -9,7 +9,16 @@
 
   services.xserver.enable = true;
   programs.kdeconnect.enable = true;
-
+  programs.firefox.nativeMessagingHosts.ff2mpv = true;
+  xdg.portal = {
+    enable = true;
+    extraPortals = with pkgs; [
+      xdg-desktop-portal-wlr
+      xdg-desktop-portal-kde
+      xdg-desktop-portal-gtk
+    ];
+    wlr.enable = true;
+  };
   #services.xserver.videoDrivers = [ "modesetting" ];
   # You may need to comment out "services.displayManager.gdm.enable = true;"
   #	services.xserver.displayManager.gdm.enable = false;
@@ -38,6 +47,9 @@
 
   };
 
+  services.pipewire.wireplumber.extraConfig.disableCamera = {
+    "monitor.libcamera" = false;
+  };
   hardware.bluetooth.enable = true;
   hardware.sensor.iio.enable = true;
 

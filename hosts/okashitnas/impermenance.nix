@@ -7,8 +7,8 @@
     systemd.services.restore-root = {
       description = "Rollback BTRFS rootfs";
       wantedBy = [ "initrd.target" ];
-      requires = [ "dev-nvme0n1p2.device" ];
-      after = [ "dev-nvme0n1p2.device" ];
+      requires = [ "dev-sdb2.device" ];
+      after = [ "dev-sdb2.device" ];
       before = [ "sysroot.mount" ];
       unitConfig.DefaultDependencies = "no";
       serviceConfig.Type = "oneshot";
@@ -17,7 +17,7 @@
 
         # We first mount the btrfs root to /mnt
         # so we can manipulate btrfs subvolumes.
-        mount -o subvol=/ /dev/nvme0n1p2 /mnt
+        mount -o subvol=/ /dev/sdb2 /mnt
 
         # While we're tempted to just delete /root and create
         # a new snapshot from /root-blank, /root is already
@@ -49,7 +49,6 @@
       "/var/log"
       "/var/lib/nixos"
       "/var/lib/systemd/coredump"
-      "/var/lib/dnsmasq"
     ];
     files = [
       "/etc/machine-id"

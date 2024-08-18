@@ -14,11 +14,13 @@
     ../../modules/desktop/apps/chromium.nix
     ../../modules/dev/go.nix
     ../../modules/yubikey-gpg.nix
+    ../../modules/chronyc.nix
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
 
     ./networking.nix
     ./disk-config.nix
+    ./remote-build.nix
   ];
   catppuccin.accent = "blue";
   catppuccin.enable = true;
@@ -77,8 +79,10 @@
   services.fwupd.enable = true;
   boot.resumeDevice = "/dev/disk/by-uuid/9b29c9ea-c366-43bb-9944-7aa35a6da1df";
   boot.kernelParams = [
-    "resume_offset=533760"
+    "resume_offset=12716125"
     "mem_sleep_default=deep"
+    "i915.enable_psr=1"
+    "i915.enable_dc=1"
   ];
   systemd.sleep.extraConfig = ''
     [Sleep]

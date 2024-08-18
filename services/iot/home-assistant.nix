@@ -1,7 +1,6 @@
 { config, pkgs, ... }:
 let
   home_conf = pkgs.writeText "configuration.yaml" ''
-    automation: !include automations.yaml
     default_config:
     frontend:
       themes: !include_dir_merge_named themes
@@ -14,8 +13,6 @@ let
         - 127.0.0.1
         - ::1
       use_x_forwarded_for: true
-    scene: !include scenes.yaml
-    script: !include scripts.yaml
     google_assistant:
       project_id: okashi-ha-22375
       service_account: !include SERVICE_ACCOUNT.JSON
@@ -50,7 +47,11 @@ in
   services.zigbee2mqtt = {
     enable = true;
     settings = {
-      homeassistant = config.services.home-assistant.enable;
+      homeassistant = true;
+      discovery_topic = "hass/status";
+      legacy_entity_attributes = false;
+      legacy_triggers = false;
+
       permit_join = true;
       serial = {
         port = "/dev/ttyACM0";
@@ -74,7 +75,7 @@ in
 
           homeassistant = {
             acl = [ "readwrite #" ];
-            hashedPassword = "$6$arZ0Sf.HKZGgSBRR$/cAB1gB4P9JQzZ6cEnIWbPNlit.PYQsbRTaRmfUsBePOtPN6P/L7TWNMaeFc2YTT904loeC3Xq3Qpdzxgen9Y/==";
+            hashedPassword = "$7$101$OxcpDe8CeBBZSFWJ$ov0qlzhUofM0dak8ztwDUq0SB6xBmMCi4odVPS7G4dvOx5U1m0kDoh1/li26h+RqyudAR3t0LCwMvcg/GX7Axw==";
           };
 
           zigbee2mqtt = {
@@ -92,6 +93,10 @@ in
   };
   services.caddy.virtualHosts."ha.okash.it" = {
     extraConfig = ''
+      import https_header
+      encode {
+          zstd better
+      }
       reverse_proxy http://localhost:8123
     '';
   };

@@ -13,7 +13,7 @@
       enable = true;
       #flattenRulesetFile = true;
       #preCheckRuleset = "sed 's/.*devices.*/devices = { lo }/g' -i ruleset.conf";
-      #checkRuleset = false;
+      checkRuleset = false;
       ruleset = ''
         flush ruleset 
         define if_wan = ${config.routers.wanIf}
@@ -45,7 +45,7 @@
             ct status dnat accept
             iifname $if_lan meta l4proto { tcp, udp } th dport 853 drop comment "Early reject DoT"
             iifname { $if_lan } oifname { $if_wan } accept comment "Allow trusted LAN to WAN"
-            iifname { $if_wan } oifname { $if_lan } ct state { established, related } accept comment "Allow established back to LANs"
+            iifname { $if_wan } oifname { $if_lan } ct state vmap { established : accept, related : accept, invalid : drop }
             iifname { $if_lan } oifname { "vlan5" } ip saddr 192.168.1.5 accept comment "Allow HA to IoT vlan"
             iifname { "vlan5" } oifname { $if_lan } ip daddr 192.168.1.5 accept comment "Allow IoT to HA"
           }
@@ -58,8 +58,8 @@
           chain prerouting {
             type nat hook prerouting priority -150; policy accept;
             iifname $if_wan tcp dport { 80 } dnat to 192.168.1.5
-            iifname $if_wan meta l4proto { tcp, udp } th dport 443 dnat to 192.168.1.5
-            iifname $if_lan meta l4proto { tcp, udp } th dport 53 redirect to 53 comment "Hijack DNS (IPv4)"
+            iifname $if_wan meta l4proto { tcp, udp } th dport { 443, 8555 } dnat to 192.168.1.5
+            #iifname $if_lan meta l4proto { tcp, udp } th dport 53 redirect to 53 comment "Hijack DNS (IPv4)"
             iifname $if_lan udp dport 123 redirect to 123 comment "Hijack NTP (IPv4)"
           }
           chain postrouting {
@@ -70,7 +70,7 @@
         table ip6 nat {
           chain prerouting {
               type nat hook prerouting priority dstnat; policy accept;
-              iifname $if_lan meta l4proto { tcp, udp } th dport 53 redirect to 53 comment "Hijack DNS (IPv6)"
+              #iifname $if_lan meta l4proto { tcp, udp } th dport 53 redirect to 53 comment "Hijack DNS (IPv6)"
               iifname $if_lan udp dport 123 redirect to 123 comment "Hijack NTP (IPv6)"
           }
         }

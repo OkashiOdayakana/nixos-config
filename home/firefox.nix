@@ -17,17 +17,6 @@ let
   };
 in
 {
-  programs.librewolf = {
-    enable = true;
-    # Enable WebGL, cookies and history
-    settings = {
-      #      "webgl.disabled" = false;
-      #      "privacy.resistFingerprinting" = false;
-      #      "privacy.clearOnShutdown.history" = false;
-      #      "privacy.clearOnShutdown.cookies" = false;
-      #      "network.cookie.lifetimePolicy" = 0;
-    };
-  };
   programs.firefox = {
     enable = true;
     package = pkgs.firefox.overrideAttrs (old: {
@@ -38,8 +27,6 @@ in
             --replace "exec -a" ${escapeShellArg envStr}" exec -a"
         '';
     });
-    nativeMessagingHosts = with pkgs.kdePackages; [ plasma-browser-integration ];
-
     profiles.default = {
       id = 0;
       isDefault = true;
@@ -64,7 +51,7 @@ in
       settings = {
         # General
         "intl.accept_languages" = "en-US,en";
-        "browser.startup.page" = 3; # Resume previous session on startup
+        "browser.startup.page" = 2; # Resume previous session on startup
         "browser.aboutConfig.showWarning" = false; # I sometimes know what I'm doing
         "browser.ctrlTab.sortByRecentlyUsed" = false; # (default) Who wants that?
         "browser.download.useDownloadDir" = false; # Ask where to save stuff
@@ -86,7 +73,7 @@ in
         "media.ffmpeg.vaapi.enabled" = true;
         "media.rdd-ffmpeg.enabled" = true;
         "widget.dmabuf.force-enabled" = true;
-        "media.av1.enabled" = false; # XXX: change once I've upgraded my GPU
+        "media.av1.enabled" = true;
         # XXX: what is this?
         "media.ffvpx.enabled" = false;
         "media.rdd-vpx.enabled" = false;
