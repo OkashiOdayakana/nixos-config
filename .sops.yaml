@@ -1,0 +1,41 @@
+keys:
+  - &user_yubikey-5c age17nukpqrjhlq6q6vd65ckzf3qvldxnqlp8x837fkh2vzeq2g5s3cse4yv8f
+  - &user_yubikey AD730ED08D56C23DB5EBC661CF2B200484B0E6CD
+  - &server_okashitnas age1qg8cft0naf6kjt3mhl8hkse4ut0x0mtdxa3f4kkntjq0x6sqveksflk444
+  - &server_xeno-dedi age10nlha9llas7vp6ltw5s9m7w4ytt286asm20cxz9k3wc6fq593qhs4sxpgu
+  - &laptop_okashitop age1vze54qgy3m7nrjp0txsg7p8hy3up9apmlnj95hepluv0s6mtwpushecydx
+  - &router age15rjlsxftjjgfs3t8s3sx8hfzeydnel6ft8kd8l0udyplkyu0p5nqz0nrht
+creation_rules:
+  - path_regex: ^secrets/secrets.yaml$
+    key_groups:
+      - age:
+        - *user_yubikey-5c
+        - *server_okashitnas
+        - *laptop_okashitop
+        - *router
+  - path_regex: ^secrets/secrets-dedi.yaml$
+    key_groups:
+      - age:
+        - *user_yubikey-5c
+        - *laptop_okashitop
+        - *server_xeno-dedi
+  - path_regex: ^secrets/okashi-pwd$
+    key_groups:
+      - age:
+        - *user_yubikey-5c
+        - *server_okashitnas
+        - *laptop_okashitop
+        - *server_xeno-dedi
+        - *router
+  - path_regex: ^secrets/jwks.pem$
+    key_groups:
+      - age:
+        - *user_yubikey-5c
+        - *laptop_okashitop
+        - *server_okashitnas
+  - path_regex: ^secrets/cf-tun-hl.json$
+    key_groups:
+      - age:
+        - *user_yubikey-5c
+        - *laptop_okashitop
+        - *server_okashitnas
