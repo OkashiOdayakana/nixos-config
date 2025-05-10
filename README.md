@@ -1,2 +1,2 @@
-# My Nix Flake
-Placeholder
+#My Nix Flake
+Hi lol
