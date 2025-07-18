@@ -1,41 +1,50 @@
 keys:
   - &user_yubikey-5c age17nukpqrjhlq6q6vd65ckzf3qvldxnqlp8x837fkh2vzeq2g5s3cse4yv8f
   - &user_yubikey AD730ED08D56C23DB5EBC661CF2B200484B0E6CD
-  - &server_okashitnas age1qg8cft0naf6kjt3mhl8hkse4ut0x0mtdxa3f4kkntjq0x6sqveksflk444
-  - &server_xeno-dedi age10nlha9llas7vp6ltw5s9m7w4ytt286asm20cxz9k3wc6fq593qhs4sxpgu
-  - &laptop_okashitop age1vze54qgy3m7nrjp0txsg7p8hy3up9apmlnj95hepluv0s6mtwpushecydx
-  - &router age15rjlsxftjjgfs3t8s3sx8hfzeydnel6ft8kd8l0udyplkyu0p5nqz0nrht
+  - &server_shizuku age1qg8cft0naf6kjt3mhl8hkse4ut0x0mtdxa3f4kkntjq0x6sqveksflk444
+  - &server_ikaros age15npcewk43cuven29f7w2wkl4t8g2t59k0fg3dgu59swjx3ylyyvq8zmq2p
+  - &server_akatsuki age1wgtkm2ykxna6l48zeyqgr0tq5seuhmp585yrll670eny35tzxu0qquxg4u
+  - &laptop_athena age1u4pxly2z2seprnxv4p9yj33fxfexu97h6heey7x8e7zlsrz75cfqqe7878
 creation_rules:
-  - path_regex: ^secrets/secrets.yaml$
+  - path_regex: ^secrets/shizuku/*
     key_groups:
       - age:
         - *user_yubikey-5c
-        - *server_okashitnas
-        - *laptop_okashitop
-        - *router
-  - path_regex: ^secrets/secrets-dedi.yaml$
+        - *server_shizuku
+        - *laptop_athena
+  - path_regex: ^secrets/ikaros/*
     key_groups:
       - age:
         - *user_yubikey-5c
-        - *laptop_okashitop
-        - *server_xeno-dedi
-  - path_regex: ^secrets/okashi-pwd$
+        - *server_shizuku
+        - *laptop_athena
+        - *server_ikaros
+  - path_regex: ^secrets/akatsuki/*
+    key_groups:
+       - age:
+         - *user_yubikey-5c
+         - *laptop_athena
+         - *server_akatsuki
+  - path_regex: ^secrets/athena/*
+    key_groups:
+       - age:
+         - *user_yubikey-5c
+         - *laptop_athena
+  - path_regex: ^modules/nixos/core/_secrets/okashi-pwd$
     key_groups:
       - age:
         - *user_yubikey-5c
-        - *server_okashitnas
-        - *laptop_okashitop
-        - *server_xeno-dedi
-        - *router
-  - path_regex: ^secrets/jwks.pem$
+        - *server_shizuku
+        - *laptop_athena
+        - *server_ikaros
+        - *server_akatsuki
+  - path_regex: ^modules/nixos/server/*
     key_groups:
       - age:
         - *user_yubikey-5c
-        - *laptop_okashitop
-        - *server_okashitnas
-  - path_regex: ^secrets/cf-tun-hl.json$
-    key_groups:
-      - age:
-        - *user_yubikey-5c
-        - *laptop_okashitop
-        - *server_okashitnas
+        - *server_shizuku
+        - *laptop_athena
+        - *server_ikaros
+        - *server_akatsuki
+
+
