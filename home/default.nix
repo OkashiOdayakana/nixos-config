@@ -21,44 +21,54 @@
 
   home.packages = with pkgs; [
     nmap
-    ripgrep
+    ripgrep-all
     bat
     fd
-    zsh-powerlevel10k
     mpv
-    fzf
   ];
+  fonts.fontconfig.enable = true;
+  programs.fzf.enable = true;
+  programs.bottom.enable = true;
+  programs.eza = {
+    enable = true;
+    icons = "auto";
+    git = true;
+  };
+  programs.nix-index.enable = true;
   programs.tmux = {
     enable = true;
     mouse = true;
     terminal = "tmux-256color";
   };
-
-  programs.zsh = {
+  programs.zoxide = {
     enable = true;
-    enableCompletion = true;
-    autosuggestion.enable = true;
-    syntaxHighlighting.enable = true;
+    enableFishIntegration = true;
+  };
 
-    shellAliases = {
-      ll = "ls -l";
-      update = "sudo nixos-rebuild switch";
-    };
-    history = {
-      size = 10000;
-      path = "${config.xdg.dataHome}/zsh/history";
-    };
-    initExtra = ''
-      export FZF_BASE=$(fzf-share)
-      source "$(fzf-share)/completion.zsh"
-      source "$(fzf-share)/key-bindings.zsh"
-      source ~/.p10k.zsh
+  programs.fish = {
+    enable = true;
+    interactiveShellInit = ''
+      set fish_greeting
+      set --universal pure_enable_single_line_prompt true
+      set --universal pure_enable_nixdevshell true
+      abbr --add cat bat -pp
     '';
-    plugins = [
+    plugins = with pkgs.fishPlugins; [
       {
-        name = "powerlevel10k";
-        src = pkgs.zsh-powerlevel10k;
-        file = "share/zsh-powerlevel10k/powerlevel10k.zsh-theme";
+        name = "autopair";
+        src = autopair.src;
+      }
+      {
+        name = "fzf-fish";
+        src = fzf-fish.src;
+      }
+      {
+        name = "colored-man-pages";
+        src = colored-man-pages.src;
+      }
+      {
+        name = "pure";
+        src = pure.src;
       }
     ];
   };

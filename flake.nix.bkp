@@ -1,0 +1,229 @@
+{
+  description = "Okashi's NixOS flake";
+
+  inputs = {
+
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    catppuccin.url = "github:catppuccin/nix";
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    lix-module = {
+      url = "https://git.lix.systems/lix-project/nixos-module/archive/2.93.0.tar.gz";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    impermanence.url = "github:nix-community/impermanence";
+
+    lanzaboote = {
+      url = "github:nix-community/lanzaboote/v0.4.2";
+
+      # Optional but recommended to limit the size of your system closure.
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    auto-cpufreq = {
+      url = "github:AdnanHodzic/auto-cpufreq";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    niri.url = "github:sodiboo/niri-flake";
+    nixos-facter-modules.url = "github:numtide/nixos-facter-modules";
+    authentik-nix.url = "github:nix-community/authentik-nix";
+  };
+
+  outputs =
+    {
+      self,
+      nixpkgs,
+      home-manager,
+      sops-nix,
+      disko,
+      catppuccin,
+      impermanence,
+      lix-module,
+      lanzaboote,
+      auto-cpufreq,
+      niri,
+      nixos-facter-modules,
+      authentik-nix,
+      ...
+    }@inputs:
+    let
+      inherit (self) outputs;
+    in
+    {
+
+      nixosConfigurations = {
+        # shizuku - home server
+        shizuku = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          specialArgs = {
+            inherit inputs outputs;
+            rootPath = ./.;
+          };
+
+          modules = [
+            ./hosts/shizuku
+            lix-module.nixosModules.default
+            sops-nix.nixosModules.sops
+
+            {
+              sops = {
+                defaultSopsFile = ./secrets/shizuku/secrets.yaml;
+                age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+              };
+            }
+
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+
+              home-manager.extraSpecialArgs = inputs;
+              home-manager.backupFileExtension = "backup";
+              home-manager.users.okashi = {
+                imports = [
+                  ./home/default.nix
+                  catppuccin.homeManagerModules.catppuccin
+                ];
+              };
+            }
+            disko.nixosModules.disko
+            lanzaboote.nixosModules.lanzaboote
+          ];
+        };
+        # ikaros - Xenyth dedi
+        ikaros = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          specialArgs = {
+            inherit inputs outputs;
+            rootPath = ./.;
+          };
+
+          modules = [
+            ./hosts/ikaros
+            lix-module.nixosModules.default
+            sops-nix.nixosModules.sops
+            nixos-facter-modules.nixosModules.facter
+            { config.facter.reportPath = ./hosts/ikaros/facter.json; }
+            authentik-nix.nixosModules.default
+
+            {
+              sops = {
+                defaultSopsFile = ./secrets/ikaros/secrets.yaml;
+                age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+              };
+            }
+
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+
+              home-manager.extraSpecialArgs = inputs;
+              home-manager.backupFileExtension = "backup";
+              home-manager.users.okashi = {
+                imports = [
+                  ./home/default.nix
+                  catppuccin.homeManagerModules.catppuccin
+                ];
+              };
+            }
+            disko.nixosModules.disko
+            #lanzaboote.nixosModules.lanzaboote
+          ];
+        };
+        # akatsuki - Haylin VM, Ashburn
+        akatsuki = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          specialArgs = {
+            inherit inputs outputs;
+            rootPath = ./.;
+          };
+
+          modules = [
+            ./hosts/akatsuki
+            lix-module.nixosModules.default
+            sops-nix.nixosModules.sops
+            nixos-facter-modules.nixosModules.facter
+            { config.facter.reportPath = ./hosts/ikaros/facter.json; }
+
+            {
+              sops = {
+                defaultSopsFile = ./secrets/akatsuki/secrets.yaml;
+                age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+              };
+            }
+
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+
+              home-manager.extraSpecialArgs = inputs;
+              home-manager.backupFileExtension = "backup";
+              home-manager.users.okashi = {
+                imports = [
+                  ./home/default.nix
+                  catppuccin.homeManagerModules.catppuccin
+                ];
+              };
+            }
+            disko.nixosModules.disko
+          ];
+        };
+        # athena - laptop
+        athena = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          specialArgs = {
+            inherit inputs outputs;
+          };
+          modules = [
+            ./hosts/athena
+            catppuccin.nixosModules.catppuccin
+            sops-nix.nixosModules.sops
+            auto-cpufreq.nixosModules.default
+            niri.nixosModules.niri
+
+            {
+              sops = {
+                defaultSopsFile = ./secrets/athena/secrets.yaml;
+                age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+                secrets = {
+                  luksPwd = { };
+                };
+              };
+            }
+
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+
+              home-manager.extraSpecialArgs = inputs;
+              home-manager.backupFileExtension = "backup";
+              home-manager.users.okashi = {
+                imports = [
+                  ./home/default.nix
+                  ./home/gui.nix
+                  catppuccin.homeModules.catppuccin
+                ];
+              };
+            }
+            disko.nixosModules.disko
+            lanzaboote.nixosModules.lanzaboote
+            lix-module.nixosModules.default
+          ];
+        };
+      };
+    };
+}

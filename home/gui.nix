@@ -5,7 +5,46 @@
     ./librewolf.nix
     ./neovim.nix
     ./firefox.nix
+    ./waybar.nix
   ];
+
+  services.swaync.enable = true;
+  programs.swaylock.enable = true;
+  services = {
+    swayidle = {
+      enable = true;
+      package = pkgs.swayidle;
+      timeouts = [
+        {
+          timeout = 180;
+          command = "${pkgs.libnotify}/bin/notify-send 'Locking in 5 seconds' -t 5000";
+        }
+
+        {
+          timeout = 185;
+          command = "${pkgs.swaylock-effects}/bin/swaylock";
+        }
+
+        {
+          timeout = 190;
+          command = "${pkgs.sway}/bin/swaymsg 'output * dpms off'";
+          resumeCommand = "${pkgs.sway}/bin/swaymsg 'output * dpms on'";
+        }
+
+        {
+          timeout = 195;
+          command = "${pkgs.systemd}/bin/systemctl suspend";
+        }
+      ];
+      events = [
+        {
+          event = "before-sleep";
+          command = "${pkgs.swaylock-effects}/bin/swaylock";
+        }
+      ];
+    };
+  };
+  services.swayosd.enable = true;
 
   home.pointerCursor = {
     name = "phinger-cursors-dark";
@@ -14,12 +53,28 @@
     gtk.enable = true;
     x11.enable = true;
   };
-
+  gtk = {
+    enable = true;
+    theme = {
+      name = "Colloid-Blue-Catppuccin-Dark";
+      package = pkgs.colloid-gtk-theme;
+    };
+  };
+  qt = {
+    enable = true;
+    platformTheme.name = "kvantum";
+    style.name = "kvantum";
+  };
+  catppuccin.enable = true;
+  catppuccin.nvim.enable = false;
   home.packages = with pkgs; [
     nerd-fonts.blex-mono
+    nerd-fonts.iosevka
     delta
     chafa
     nerd-fonts.symbols-only
+    swaybg
+    xwayland-satellite
   ];
 
   fonts.fontconfig.enable = true;
@@ -27,22 +82,13 @@
   services.arrpc = {
     enable = true;
   };
-  programs.kitty = {
-    enable = true;
-    themeFile = "Catppuccin-Mocha";
 
-    extraConfig = ''
-      symbol_map U+e000-U+e00a,U+ea60-U+ebeb,U+e0a0-U+e0c8,U+e0ca,U+e0cc-U+e0d4,U+e200-U+e2a9,U+e300-U+e3e3,U+e5fa-U+e6b1,U+e700-U+e7c5,U+f000-U+f2e0,U+f300-U+f372,U+f400-U+f532,U+f0001-U+f1af0 Symbols Nerd Font Mono
-      symbol_map U+2600-U+26FF Noto Color Emoji
-    '';
-  };
   programs.wezterm = {
     enable = true;
-    enableZshIntegration = true;
     extraConfig = ''
           local config = {
+              font = wezterm.font 'Iosevka Nerd Font',
               use_fancy_tab_bar =  true,
-              font = wezterm.font 'Blex Mono Nerd Font',
               color_scheme = "Catppuccin Mocha", -- or Macchiato, Frappe, Latte
               window_frame = {
                   active_titlebar_bg = '#181825',
