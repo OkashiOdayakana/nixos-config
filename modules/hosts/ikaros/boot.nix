@@ -1,22 +1,22 @@
 {
   flake.modules.nixos.host_ikaros =
-    {lib, ...}:
-   {
-    boot = {
-          loader = {
-      efi.canTouchEfiVariables = true;
-      systemd-boot.enable = lib.mkForce false;
-      timeout = 0;
-    };
+    { lib, ... }:
+    {
+      boot = {
+        loader = {
+          efi.canTouchEfiVariables = true;
+          systemd-boot.enable = lib.mkForce false;
+          timeout = 0;
+        };
 
-    initrd = {
-      systemd.enable = true;
-    };
+        initrd = {
+          systemd.enable = true;
+        };
 
-    lanzaboote = {
-      enable = true;
-      pkiBundle = "/var/lib/sbctl";
+        lanzaboote = {
+          enable = true;
+          pkiBundle = "/var/lib/sbctl";
+        };
+      };
     };
-    };
-  };
 }

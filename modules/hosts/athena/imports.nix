@@ -18,5 +18,11 @@
       inputs.lanzaboote.nixosModules.lanzaboote
     ];
 
+    programs.adb.enable = true;
+    users.users.okashi.extraGroups = [
+      "adbusers"
+      "kvm"
+    ];
+
   };
 }

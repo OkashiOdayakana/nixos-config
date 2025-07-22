@@ -17,5 +17,7 @@
           execWheelOnly = true;
         };
       };
+
+      services.userborn.enable = true;
     };
 }

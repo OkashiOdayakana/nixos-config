@@ -12,7 +12,7 @@
         firewall = {
           allowedTCPPorts = [
             80
-	    179
+            179
             443
           ];
           allowedUDPPorts = [ 443 ];
@@ -24,17 +24,20 @@
           matchConfig.MACAddress = "8c:dc:d4:ae:42:b1";
           address = [
             "207.174.104.41/24"
-	    "2602:f61a:f01::1/48"
+            "2602:f61a:f01::1/48"
             "2602:fd50:1a1:41::2/64"
           ];
           routes = [
-            { Gateway = "2602:fd50:1a1:41::1"; PreferredSource = "2602:f61a:f01::1"; }
+            {
+              Gateway = "2602:fd50:1a1:41::1";
+              PreferredSource = "2602:f61a:f01::1";
+            }
             { Gateway = "207.174.104.1"; }
           ];
-	  networkConfig = {
-		DHCP = "no";
-		IPv6AcceptRA = false;
-	  };
+          networkConfig = {
+            DHCP = "no";
+            IPv6AcceptRA = false;
+          };
         };
       };
 

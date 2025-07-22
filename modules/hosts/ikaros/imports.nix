@@ -18,8 +18,8 @@
         ./_nixos
       ];
       services.tailscale = {
-	openFirewall = true;
-	useRoutingFeatures = "server";
+        openFirewall = true;
+        useRoutingFeatures = "server";
       };
 
     };

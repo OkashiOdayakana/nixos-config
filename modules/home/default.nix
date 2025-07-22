@@ -1,11 +1,11 @@
-{config, inputs, ...}:
+{ config, inputs, ... }:
 {
   flake.modules.homeManager.core =
     { lib, ... }:
     {
       imports = with config.flake.modules.homeManager; [
-	shell
-	inputs.catppuccin.homeModules.catppuccin
+        shell
+        inputs.catppuccin.homeModules.catppuccin
       ];
       programs.home-manager.enable = true;
       # See https://ohai.social/@rycee/112502545466617762

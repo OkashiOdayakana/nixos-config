@@ -7,7 +7,7 @@
       inputs.sops-nix.nixosModules.sops
       inputs.catppuccin.nixosModules.catppuccin
       sops
-      home-manager  
+      home-manager
     ];
   };
 }

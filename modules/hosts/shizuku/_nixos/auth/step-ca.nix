@@ -1,6 +1,6 @@
 { config, ... }:
 {
-  sops.secrets.ca-idm = {};
+  sops.secrets.ca-idm = { };
   services.step-ca = {
     enable = true;
     address = "127.0.0.1";

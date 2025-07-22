@@ -25,7 +25,7 @@
         vim
         apparmor-profiles
         roddhjav-apparmor-rules
-	zellij
+        zellij
       ];
     };
 }

@@ -1,5 +1,5 @@
 {
-flake.modules.homeManager.shell = {
-programs.eza.enable = true;
-};
+  flake.modules.homeManager.shell = {
+    programs.eza.enable = true;
+  };
 }

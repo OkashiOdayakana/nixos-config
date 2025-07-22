@@ -1,4 +1,9 @@
-{ config, inputs, pkgs, ... }:
+{
+  config,
+  inputs,
+  pkgs,
+  ...
+}:
 let
   pkgsMaster = import inputs.nixpkgs-master {
     inherit (pkgs.stdenv.hostPlatform) system;
