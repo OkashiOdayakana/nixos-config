@@ -16,7 +16,7 @@ let
 in
 applyPatches {
   src = fetchFromGitHub {
-    owner = "glitch-soc";
+    owner = "TheEssem";
     repo = "mastodon";
     inherit (versionData) rev hash;
   };

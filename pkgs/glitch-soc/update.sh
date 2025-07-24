@@ -4,19 +4,19 @@ set -e
 
 cd "$(dirname "$0")"  # cd to the script's directory
 
-echo "Retrieving latest glitch-soc/mastodon commit..."
-commit="$(curl -SsL 'https://api.github.com/repos/glitch-soc/mastodon/branches/main')"
+echo "Retrieving latest TheEssem/mastodon commit..."
+commit="$(curl -SsL 'https://api.github.com/repos/TheEssem/mastodon/branches/main')"
 rev="$(jq -r '.commit.sha' <<<"$commit")"
 echo "Latest commit is $rev."
 
 echo
-echo "Prefetching glitch-soc/mastodon source..."
-hash="$(nix-prefetch-github glitch-soc mastodon --rev $rev | jq -r '.hash')"
+echo "Prefetching TheEssem/mastodon source..."
+hash="$(nix-prefetch-github TheEssem mastodon --rev $rev | jq -r '.hash')"
 echo "Source hash is $hash."
 
 echo
 echo "Building source derivation..."
-srcdir="$(nix build --no-link --print-out-paths --no-warn-dirty ../..#glitch-soc-source)"
+srcdir="$(nix build --no-link --print-out-paths --no-warn-dirty ../..#TheEssem-source)"
 echo "Source derivation is $srcdir."
 
 echo

@@ -10,7 +10,7 @@
       services.opensearch.enable = true;
       services.mastodon = {
         enable = true;
-        package = perSystem.config.packages.glitch-soc;
+        package = perSystem.config.packages.TheEssem;
         localDomain = "puppygirls.forsale";
         streamingProcesses = 3;
         smtp = {
@@ -36,14 +36,14 @@
 
         route * {
             file_server * {
-            root ${perSystem.config.packages.glitch-soc}/public
+            root ${perSystem.config.packages.TheEssem}/public
             pass_thru
             }
             reverse_proxy * unix//run/mastodon-web/web.socket
         }
 
         handle_errors {
-            root * ${perSystem.config.packages.glitch-soc}/public
+            root * ${perSystem.config.packages.TheEssem}/public
             rewrite 500.html
             file_server
         }

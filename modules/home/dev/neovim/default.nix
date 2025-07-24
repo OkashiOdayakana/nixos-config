@@ -13,7 +13,7 @@
         vimAlias = true;
         nixpkgs.useGlobalPackages = true;
         extraPackages = with pkgs; [
-        nixfmt-rfc-style
+          nixfmt-rfc-style
         ];
 
         performance = {

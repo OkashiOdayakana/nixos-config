@@ -1,30 +1,29 @@
-
 {
-	flake.modules.homeManager.neovim = {
-		programs.nixvim.opts = {
-			# Show line numbers
-			number = true;
+  flake.modules.homeManager.neovim = {
+    programs.nixvim.opts = {
+      # Show line numbers
+      number = true;
 
-			# Enable mouse mode
-			mouse = "a";
+      # Enable mouse mode
+      mouse = "a";
 
-			showmode = false;
+      showmode = false;
 
-			# Save undo history
-			undofile = true;
+      # Save undo history
+      undofile = true;
 
-			# Case-insensitive search
-			ignorecase = true;
-			smartcase = true;
+      # Case-insensitive search
+      ignorecase = true;
+      smartcase = true;
 
-			breakindent = true;
-			expandtab = true;
-			signcolumn = "yes";
+      breakindent = true;
+      expandtab = true;
+      signcolumn = "yes";
 
-			hlsearch = true;
-			smoothscroll = true;
+      hlsearch = true;
+      smoothscroll = true;
 
-			confirm = true;
-		};
-	};
+      confirm = true;
+    };
+  };
 }
