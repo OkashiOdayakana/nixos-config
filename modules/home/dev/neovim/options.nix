@@ -16,6 +16,7 @@
       ignorecase = true;
       smartcase = true;
 
+      autoindent = true;
       breakindent = true;
       expandtab = true;
       signcolumn = "yes";
