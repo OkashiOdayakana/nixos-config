@@ -2,16 +2,6 @@
   flake.modules.nixos.host_shizuku =
     { pkgs, ... }:
     {
-      fileSystems."/media/seedbox" = {
-        device = "[fd7a:115c:a1e0::a001:4c2d]:/media/nfs_share";
-        fsType = "nfs";
-        options = [
-          "nfsvers=4.2"
-          "noauto"
-          "x-systemd.idle-timeout=600"
-          "x-systemd.automount"
-        ];
-      };
       systemd.services."bcachefs-mount" = {
         after = [ "local-fs.target" ];
         wantedBy = [ "multi-user.target" ];
