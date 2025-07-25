@@ -14,6 +14,7 @@
       inputs.lanzaboote.nixosModules.lanzaboote
       jellyfin
       postgresql
+      ntp-client
       ./_nixos
     ];
 

@@ -16,6 +16,7 @@
         mastodon
         attic
         miniflux
+        ntp-client
         ./_nixos
       ];
       services.tailscale = {
