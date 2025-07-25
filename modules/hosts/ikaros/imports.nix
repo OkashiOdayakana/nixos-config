@@ -16,7 +16,6 @@
         mastodon
         attic
         miniflux
-        mumble
         ./_nixos
       ];
       services.tailscale = {

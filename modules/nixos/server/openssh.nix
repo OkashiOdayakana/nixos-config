@@ -6,7 +6,7 @@
 
       # require public key authentication for better security
       settings = {
-        PasswordAuthentication = true;
+        PasswordAuthentication = false;
         KbdInteractiveAuthentication = false;
         X11Forwarding = false;
         PermitRootLogin = "no";
