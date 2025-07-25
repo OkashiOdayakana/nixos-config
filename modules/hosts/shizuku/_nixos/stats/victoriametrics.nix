@@ -48,9 +48,6 @@
         "--collector.tcpstat"
       ];
     };
-    unpoller = {
-      enable = true;
-    };
     nut.enable = true;
   };
   services.victorialogs.enable = true;
