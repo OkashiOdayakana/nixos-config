@@ -15,6 +15,7 @@
       jellyfin
       postgresql
       ntp-client
+      calibre
       ./_nixos
     ];
 
