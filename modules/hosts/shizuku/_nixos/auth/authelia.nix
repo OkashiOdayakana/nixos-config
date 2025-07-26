@@ -81,6 +81,13 @@
         remember_me_duration = "1M";
         domain = "auth.okashi-lan.org";
         redis.host = "/run/redis-authelia-main/redis.sock";
+        cookies = [
+          {
+            domain = "calibre.okashi-lan.org";
+            authelia_url = "https://auth.okashi-lan.org";
+            default_redirection_url = "https://calibre.okashi-lan.org";
+          }
+        ];
       };
       access_control = {
         default_policy = "one_factor";
