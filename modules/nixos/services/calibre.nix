@@ -25,6 +25,7 @@
         };
 
         caddy.virtualHosts."calibre.okashi-lan.org".extraConfig = ''
+          import tls_settings
           forward_auth localhost:9091 {
                   uri /api/authz/forward-auth
                   copy_headers Remote-User Remote-Groups Remote-Email Remote-Name
