@@ -3,7 +3,9 @@
   ...
 }:
 {
-  nixosHosts.ikaros = { };
+  nixosHosts.ikaros = {
+    tailscale-ip6 = "fd7a:115c:a1e0::4201:7c39";
+  };
 
   flake.modules.nixos.host_ikaros =
     { inputs, ... }:
@@ -17,6 +19,8 @@
         attic
         miniflux
         ntp-client
+        ntfy
+        mollysocket
         ./_nixos
       ];
       services.tailscale = {

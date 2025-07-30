@@ -2,37 +2,23 @@
   flake.modules.nixos.calibre =
     { ... }:
     {
-      services = {
-        calibre-server = {
-          enable = true;
-          port = 8012;
-          libraries = [
-            "/Nas-main/calibre"
-          ];
-        };
-        calibre-web = {
-          enable = true;
-          options = {
-            reverseProxyAuth = {
-              enable = true;
-              header = "Remote-User";
+      virtualisation.oci-containers = {
+        backend = "podman";
+        containers = {
+          calibre-web-automated = {
+            image = "crocodilestick/calibre-web-automated:latest";
+            volumes = [
+              "/Nas-main/calibre:/calibre-library"
+            ];
+            ports = [ "8083:8083" ];
+            environment = {
+              PUID = "1000";
+              PGID = "1000";
+              TZ = "America/New_York";
             };
-            calibreLibrary = "/Nas-main/calibre";
-            enableBookConversion = true;
-            enableBookUploading = true;
-            enableKepubify = true;
           };
         };
-
-        caddy.virtualHosts."calibre.okashi-lan.org".extraConfig = ''
-          import tls_settings
-          forward_auth localhost:9091 {
-                  uri /api/authz/forward-auth
-                  copy_headers Remote-User Remote-Groups Remote-Email Remote-Name
-          }
-
-          reverse_proxy localhost:8012
-        '';
       };
+      services.caddy.reverseProxies."books.okashi-lan.org".port = 8083;
     };
 }

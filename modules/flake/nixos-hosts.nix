@@ -18,6 +18,10 @@ in
               type = types.str;
               default = "x86_64-linux";
             };
+            tailscale-ip6 = mkOption {
+              type = types.str;
+              default = "::1";
+            };
           };
         };
       in

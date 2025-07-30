@@ -43,7 +43,6 @@
       theme = "dark";
       default_2fa_method = "totp";
       totp.issuer = "auth.okashi-lan.org";
-      default_redirection_url = "https://auth.okashi-lan.org";
 
       storage.postgres = {
         address = "unix:///var/run/postgresql";
@@ -79,13 +78,12 @@
         expiration = "12h";
         inactivity = "45m";
         remember_me_duration = "1M";
-        domain = "auth.okashi-lan.org";
         redis.host = "/run/redis-authelia-main/redis.sock";
         cookies = [
           {
-            domain = "calibre.okashi-lan.org";
-            authelia_url = "https://auth.okashi-lan.org";
-            default_redirection_url = "https://calibre.okashi-lan.org";
+            domain = "books.okashi-lan.org";
+            authelia_url = "https://auth.books.okashi-lan.org";
+            default_redirection_url = "https://books.okashi-lan.org";
           }
         ];
       };
@@ -209,4 +207,5 @@
   };
 
   services.caddy.reverseProxies."auth.okashi-lan.org".port = 9091;
+  services.caddy.reverseProxies."auth.books.okashi-lan.org".port = 9091;
 }

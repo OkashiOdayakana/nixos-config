@@ -4,7 +4,9 @@
   ...
 }:
 {
-  nixosHosts.shizuku = { };
+  nixosHosts.shizuku = {
+    tailscale-ip6 = "fd7a:115c:a1e0::8f01:607e";
+  };
 
   flake.modules.nixos.host_shizuku = {
     system.stateVersion = "24.05";
@@ -16,6 +18,9 @@
       postgresql
       ntp-client
       calibre
+      podman
+      victoriametrics
+      vector
       ./_nixos
     ];
 

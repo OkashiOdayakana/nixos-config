@@ -25,6 +25,15 @@
 
   services.matrix-synapse = {
     enable = true;
+    extras = [
+      "systemd"
+      "postgres"
+      "url-preview"
+      "jwt"
+      "oidc"
+      "redis"
+      "cache-memory"
+    ];
     extraConfigFiles = [ config.sops.secrets.synapse-oidc.path ];
     settings = {
       server_name = "t4tlabs.net";

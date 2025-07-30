@@ -9,6 +9,9 @@
         terminal
         neovim
       ];
-      home.packages = [ pkgs.signal-desktop-bin ];
+      home.packages = [
+        pkgs.signal-desktop-bin
+        pkgs.koreader
+      ];
     };
 }
