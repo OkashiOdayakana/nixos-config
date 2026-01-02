@@ -43,7 +43,6 @@
       theme = "dark";
       default_2fa_method = "totp";
       totp.issuer = "auth.okashi-lan.org";
-      default_redirection_url = "https://auth.okashi-lan.org";
 
       storage.postgres = {
         address = "unix:///var/run/postgresql";
@@ -79,13 +78,12 @@
         expiration = "12h";
         inactivity = "45m";
         remember_me_duration = "1M";
-        domain = "auth.okashi-lan.org";
         redis.host = "/run/redis-authelia-main/redis.sock";
         cookies = [
           {
-            domain = "calibre.okashi-lan.org";
+            domain = "okashi-lan.org";
             authelia_url = "https://auth.okashi-lan.org";
-            default_redirection_url = "https://calibre.okashi-lan.org";
+            default_redirection_url = "https://home.okashi-lan.org";
           }
         ];
       };
@@ -125,7 +123,13 @@
               client_name = "Immich";
               client_secret = "$pbkdf2-sha512$310000$1uP5hvRVGWaKdo.JpQijlg$0NdauhXBH825wr9eWKO1nYuSw2Gz26HSJvMlikD8hgh5gTfvLbkrTc9r3oMnssdrg7bPU2HFj2JUTp2INWxXzQ";
               public = false;
-              #authorization_policy = "two_factor";
+              authorization_policy = "two_factor";
+              require_pkce = false;
+              pkce_challenge_method = "";
+              grant_types = [
+                "authorization_code"
+              ];
+
               redirect_uris = [
                 "https://immich.okashi-lan.org/auth/login"
                 "https://immich.okashi-lan.org/user-settings"
@@ -138,6 +142,7 @@
                 "email"
               ];
               userinfo_signed_response_alg = "none";
+              access_token_signed_response_alg = "none";
               token_endpoint_auth_method = "client_secret_post";
             }
             {

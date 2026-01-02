@@ -14,6 +14,7 @@
     };
     kernelParams = [
       "amd_pstate=active"
+      #      "microcode.amd_sha_check=off"
     ];
 
     loader.systemd-boot.enable = lib.mkForce false;

@@ -11,7 +11,7 @@
         nerd-fonts.symbols-only
         noto-fonts-cjk-sans
         noto-fonts
-        noto-fonts-emoji
+        noto-fonts-color-emoji
         proggyfonts
       ];
 

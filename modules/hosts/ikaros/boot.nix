@@ -5,7 +5,7 @@
       boot = {
         loader = {
           efi.canTouchEfiVariables = true;
-          systemd-boot.enable = lib.mkForce false;
+          systemd-boot.enable = lib.mkForce true;
           timeout = 0;
         };
 
@@ -13,10 +13,10 @@
           systemd.enable = true;
         };
 
-        lanzaboote = {
-          enable = true;
-          pkiBundle = "/var/lib/sbctl";
-        };
+        # lanzaboote = {
+        #   enable = true;
+        #   pkiBundle = "/var/lib/sbctl";
+        # };
       };
     };
 }

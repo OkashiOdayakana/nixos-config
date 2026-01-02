@@ -4,7 +4,7 @@
     ./web
     ./pds.nix
     ./routinator.nix
-    ./synapse.nix
+    #   ./synapse.nix
     ./bird.nix
   ];
 }

@@ -8,7 +8,7 @@
         nixd = {
           # Nix LS
           enable = true;
-          settings =
+          config =
             let
               # The wrapper curries `_nixd-expr.nix` with the `self` and `system` args
               # This makes `init.lua` a bit DRYer and more readable

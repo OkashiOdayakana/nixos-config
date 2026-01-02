@@ -50,7 +50,7 @@
                   mountOptions = [
                     "rw"
                     "autodefrag"
-                    "compress=zstd:force"
+                    "compress-force=zstd"
                     "noatime"
                   ];
                 };

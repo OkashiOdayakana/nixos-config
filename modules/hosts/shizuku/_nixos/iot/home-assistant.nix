@@ -21,6 +21,11 @@ let
         - 127.0.0.1
         - ::1
       use_x_forwarded_for: true
+      ip_ban_enabled: true
+      login_attempts_threshold: 5
+      cors_allowed_origins:
+        - https://google.com
+        - https://www.home-assistant.io
     google_assistant:
       project_id: okashi-ha-22375
       service_account: !include SERVICE_ACCOUNT.JSON
@@ -48,6 +53,24 @@ in
     format = "binary";
   };
 
+  environment.etc."fail2ban/filter.d/home-assistant.conf".text = ''
+    [Definition]
+    failregex = ^.* \[homeassistant\.components\.http\.ban\] Login attempt or request with invalid authentication from <HOST>.*$
+
+    ignoreregex =
+
+    journalmatch = _SYSTEMD_UNIT=home-assistant.service + _COMM=home-assistant
+
+    datepattern = {^LN-BEG}
+  '';
+
+  services.fail2ban.jails = {
+    home-assistant = {
+      filter = "home-assistant";
+      enabled = true;
+    };
+  };
+
   virtualisation.oci-containers = {
     backend = "podman";
     containers.homeassistant = {
@@ -65,12 +88,15 @@ in
   services.zigbee2mqtt = {
     enable = true;
     settings = {
-      homeassistant = true;
+      homeassistant = {
+        enabled = true;
+        experimental_event_entities = true;
+      };
       discovery_topic = "hass/status";
       legacy_entity_attributes = false;
       legacy_triggers = false;
 
-      permit_join = true;
+      #permit_join = true;
       serial = {
         port = "/dev/ttyACM0";
         adapter = "ember";

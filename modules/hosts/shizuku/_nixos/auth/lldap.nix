@@ -34,6 +34,7 @@
       ldap_base_dn = "dc=okashi,dc=cloud";
       database_url = "postgres://lldap:TEST@localhost:5432/lldap?host=/var/run/postgresql";
       key_seed = config.sops.secrets.lldap_key_seed.path;
+      force_ldap_user_pass_reset = "always";
     };
     environment = {
       LLDAP_JWT_SECRET_FILE = config.sops.secrets.lldap_jwt_secret.path;

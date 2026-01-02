@@ -37,27 +37,34 @@
                       "/root" = {
                         mountpoint = "/";
                         mountOptions = [
-                          "compress-force=zstd:2"
+                          "compress=zstd:-1"
                           "noatime"
                         ];
                       };
                       "/home" = {
                         mountpoint = "/home";
                         mountOptions = [
-                          "compress-force=zstd:2"
+                          "compress=zstd:-1"
                           "noatime"
                         ];
                       };
                       "/nix" = {
                         mountpoint = "/nix";
                         mountOptions = [
-                          "compress-force=zstd:2"
+                          "compress=zstd:-1"
                           "noatime"
                         ];
                       };
                       "/swap" = {
                         mountpoint = "/.swapvol";
                         swap.swapfile.size = "32G";
+                      };
+                      "/incus" = {
+                        mountpoint = "/var/lib/incus/data";
+                        mountOptions = [
+                          "compress=zstd:-1"
+                          "noatime"
+                        ];
                       };
                     };
                   };

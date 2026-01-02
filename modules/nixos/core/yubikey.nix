@@ -7,7 +7,7 @@
         yubikey-personalization
         yubico-piv-tool
         cfssl
-        pcsctools
+        pcsc-tools
         pcscliteWithPolkit.out
       ];
 

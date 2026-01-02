@@ -1,7 +1,7 @@
 {
   imports = [
     ./cloudflared.nix
-    ./podman.nix
+    ./arrs.nix
     ./auth
     ./iot
     ./backup

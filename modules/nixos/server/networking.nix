@@ -8,7 +8,7 @@
       enable = true;
       dnssec = "allow-downgrade";
       domains = [ "~." ];
-      dnsovertls = "true";
+      dnsovertls = "false";
     };
   };
 }

@@ -29,6 +29,7 @@
       encode {
           zstd better
       }
+      import tls_settings
       reverse_proxy [::1]:8443 {  # the unifi controller runs on the same machine as caddy
         transport http {
             tls_insecure_skip_verify  # we don't verify the controller https cert

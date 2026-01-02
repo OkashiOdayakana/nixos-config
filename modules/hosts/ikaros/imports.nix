@@ -3,20 +3,29 @@
   ...
 }:
 {
-  nixosHosts.ikaros = { };
+  nixosHosts.ikaros = {
+    tailscale-ip6 = "fd7a:115c:a1e0::4201:7c39";
+  };
 
   flake.modules.nixos.host_ikaros =
     { inputs, ... }:
     {
-      system.stateVersion = "24.05";
+      system.stateVersion = "25.11";
 
       imports = with config.flake.modules.nixos; [
-        inputs.lanzaboote.nixosModules.lanzaboote
+        #inputs.lanzaboote.nixosModules.lanzaboote
         server
-        mastodon
+        #mastodon
+        meilisearch
+        sharkey
         attic
         miniflux
         ntp-client
+        ntfy
+        mollysocket
+        vector
+        podman
+        cocoon
         ./_nixos
       ];
       services.tailscale = {

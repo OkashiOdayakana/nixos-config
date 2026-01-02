@@ -7,21 +7,16 @@
   nixosHosts.athena = { };
 
   flake.modules.nixos.host_athena = {
-    system.stateVersion = "25.05";
+    system.stateVersion = "25.11";
 
     imports = with config.flake.modules.nixos; [
       desktop
       desktop_kde
       laptop
-      graphics_intel
+      graphics_amd
       ntp-client
       inputs.lanzaboote.nixosModules.lanzaboote
-    ];
-
-    programs.adb.enable = true;
-    users.users.okashi.extraGroups = [
-      "adbusers"
-      "kvm"
+      inputs.nix-mineral.nixosModules.nix-mineral
     ];
 
   };

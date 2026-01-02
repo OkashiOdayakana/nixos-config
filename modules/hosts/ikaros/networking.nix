@@ -21,7 +21,7 @@
       systemd.network = {
         enable = true;
         networks."10-wan" = {
-          matchConfig.MACAddress = "8c:dc:d4:ae:42:b1";
+          matchConfig.MACAddress = "8c:dc:d4:ae:42:19";
           address = [
             "207.174.104.41/24"
             "2602:f61a:f01::1/48"

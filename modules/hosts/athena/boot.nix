@@ -1,28 +1,26 @@
-{ lib, ... }:
+{ lib, pkgs, ... }:
 {
-  flake.modules.nixos.host_athena.boot = {
-    loader = {
-      efi.canTouchEfiVariables = true;
-      systemd-boot.enable = lib.mkForce false;
-      timeout = 0;
-    };
+  flake.modules.nixos.host_athena =
+    { pkgs, ... }:
+    {
+      boot = {
+        loader = {
+          efi.canTouchEfiVariables = true;
+          systemd-boot.enable = lib.mkForce false;
 
-    initrd = {
-      systemd.enable = true;
-      #availableKernelModules = [ "i915" ];
-    };
+          timeout = 0;
+        };
 
-    kernelModules = [
-      "i915"
-      "iwlwifi"
-    ];
-    lanzaboote = {
-      enable = true;
-      pkiBundle = "/var/lib/sbctl";
-      settings = {
-        # console-mode = "max";
+        lanzaboote = {
+          enable = true;
+          pkiBundle = "/var/lib/sbctl";
+        };
+
+        initrd = {
+          systemd.enable = true;
+        };
+
+        kernelPackages = lib.mkForce pkgs.linuxPackages_zen;
       };
     };
-
-  };
 }

@@ -28,7 +28,7 @@
 
         settings = {
           listen = "[::1]:8038";
-          allowed-hosts = [ "nix-cache.t4tlabs.net" ];
+          #allowed-hosts = [ "nix-cache.t4tlabs.net" "*" ];
           api-endpoint = "https://nix-cache.t4tlabs.net/";
           database.url = "postgresql://atticd?host=/run/postgresql";
 

@@ -1,6 +1,6 @@
 {
   imports = [
-    ./home-assistant.nix
+    #    ./home-assistant.nix
     ./ups.nix
     ./unifi.nix
   ];
