@@ -42,8 +42,6 @@
         environmentFiles = [ config.sops.secrets.sharkey-env.path ];
       };
 
-
-
       services.caddy.reverseProxies."puppygirls.forsale".port = 3001;
     };
 }

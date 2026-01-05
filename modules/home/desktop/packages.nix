@@ -6,7 +6,6 @@
         nerd-fonts.blex-mono
         nerd-fonts.iosevka
         nerd-fonts.symbols-only
-        vesktop
       ];
     };
 }

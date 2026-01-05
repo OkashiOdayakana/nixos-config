@@ -2,8 +2,17 @@
   flake.modules.nixos.host_athena =
     { lib, ... }:
     {
+
+      hardware = {
+        enableRedistributableFirmware = true;
+        wirelessRegulatoryDatabase = true;
+      };
+
+      services.fprintd.enable = true;
+      zramSwap.enable = true;
+
       nix-mineral = {
-        enable = true;
+        enable = false;
         settings = {
           kernel = {
             only-signed-modules = true;

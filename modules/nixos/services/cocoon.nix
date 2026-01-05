@@ -24,7 +24,7 @@
           COCOON_RELAYS = "https://bsky.network";
           COCOON_ADMIN_PASSWORD = "4c3454b0ab6a9966c6fd592051aea1ce";
           COCOON_SESSION_SECRET = "02c33337b4b55371141af0ec198dffc3dc1c464d7e60e846596330802f1dd7b5";
-	  COCOON_CONTACT_EMAIL = "isla@t4tlabs.net";
+          COCOON_CONTACT_EMAIL = "isla@t4tlabs.net";
         };
       };
       services.caddy.virtualHosts."cocoon.t4tlabs.net" = {
